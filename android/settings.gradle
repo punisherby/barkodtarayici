@@ -1,4 +1,6 @@
 rootProject.name = 'BarkodTarayici'
+include ':react-native-open-settings'
+project(':react-native-open-settings').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-open-settings/android')
 include ':react-native-torch'
 project(':react-native-torch').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-torch/android')
 include ':react-native-smart-barcode'

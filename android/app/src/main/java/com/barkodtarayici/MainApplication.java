@@ -3,6 +3,7 @@ package com.barkodtarayici;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.opensettings.OpenSettingsPackage;
 import com.cubicphuse.RCTTorch.RCTTorchPackage;
 import com.reactnativecomponent.barcode.RCTCapturePackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
@@ -28,6 +29,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
       protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
                 new MainReactPackage(),
+            new OpenSettingsPackage(),
                 new RCTTorchPackage(),
                 new RCTCapturePackage(),
                 new ReactNativeConfigPackage()

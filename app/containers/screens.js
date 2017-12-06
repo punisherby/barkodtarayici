@@ -1,5 +1,6 @@
 import App from "./App";
 import BarcodeScan from "./BarcodeScan"
+import CameraPermissionError from "./CameraPermissionError"
 
 export const SCREENS_MAP = {
     App: {
@@ -9,5 +10,9 @@ export const SCREENS_MAP = {
     BarcodeScan: {
         name: 'barkod.BarcodeScan',
         screen: BarcodeScan
+    },
+    CameraPermissionError: {
+        name: 'barkod.CameraPermissionError',
+        screen: CameraPermissionError
     }
 };

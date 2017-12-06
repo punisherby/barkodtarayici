@@ -28,8 +28,7 @@ class BarcodeScan extends AppBaseContainer {
         rootNavigator = this.props.navigator;
     }
 
-    componentWillMount() {
-
+    componentDidMount() {
     }
 
     componentWillUnmount() {

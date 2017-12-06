@@ -14,6 +14,7 @@ import {
 
 import { Container, Header, Content, Button } from 'native-base';
 import AppBaseContainer from "./AppBaseContainer";
+import Permissions from 'react-native-permissions';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -25,6 +26,8 @@ const instructions = Platform.select({
 export let rootNavigator = null;
 
 class App extends AppBaseContainer {
+
+    barcodeScanFirstTimeClick;
 
     static navigatorStyle = {
         tabBarHidden: true,
@@ -51,9 +54,30 @@ class App extends AppBaseContainer {
           {instructions}
         </Text>
 
-        <Button full onPress={() => this.pushToActiveScreenStack(this.getScreenMap().BarcodeScan.name)}><Text> Primary </Text></Button>
+        <Button full onPress={() => this._checkCameraPermission()}><Text> Primary </Text></Button>
       </View>
     );
+  }
+
+  _checkCameraPermission() {
+      Permissions.check('camera')
+          .then(response => {
+              if (response === "undetermined") {
+                  this.barcodeScanFirstTimeClick = true;
+              } else {
+                  this.barcodeScanFirstTimeClick = false;
+              }
+              Permissions.request('camera')
+                  .then(response => {
+                      if (response === "denied" || response === "restricted") {
+                          if (!this.barcodeScanFirstTimeClick) {
+                              this.pushToActiveScreenStack(this.getScreenMap().CameraPermissionError.name)
+                          }
+                      } else {
+                          this.pushToActiveScreenStack(this.getScreenMap().BarcodeScan.name)
+                      }
+                  });
+          })
   }
 }
 
