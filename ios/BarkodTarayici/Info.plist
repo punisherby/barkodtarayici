@@ -51,6 +51,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+    	<string>Kamera yetkisi gerekiyor</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
