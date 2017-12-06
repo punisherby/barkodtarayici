@@ -1,9 +1,9 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image} from "react-native";
 import Barcode from 'react-native-smart-barcode';
-import Torch from 'react-native-torch';
 import { Container, Header, Content, Button } from 'native-base';
 import AppBaseContainer from "./AppBaseContainer";
+import Torch from 'react-native-torch';
 
 export let rootNavigator = null;
 
@@ -76,6 +76,14 @@ class BarcodeScan extends AppBaseContainer {
     render() {
         return (
             <View style={{flex: 1, backgroundColor: "blue"}}>
+                <TouchableOpacity
+                    style={{flex: 0.1, padding: 20}}
+                    onPress={this.switchTorch.bind(this)}
+                >
+                    <Image
+                        source={this.flashIcon()}
+                    />
+                </TouchableOpacity>
               <Barcode style={{flex: 0.6, backgroundColor: "white"}}
                        ref={ component => this._barCode = component }
                        scannerRectWidth={300}
