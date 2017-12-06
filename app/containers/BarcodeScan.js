@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert} from "react-native";
 import Barcode from 'react-native-smart-barcode';
 import Torch from 'react-native-torch';
 import { Container, Header, Content, Button } from 'native-base';
@@ -40,6 +40,15 @@ class BarcodeScan extends AppBaseContainer {
         }
         this.barcodeDetected = true;
         this._barCode.stopScan();
+
+        Alert.alert(
+            'Barcode Detected',
+            e.nativeEvent.data.code,
+            [
+                {text: 'OK', onPress: () => this._resetBarcodeScan()},
+            ],
+            { cancelable: false }
+        )
     }
 
     switchTorch() {
