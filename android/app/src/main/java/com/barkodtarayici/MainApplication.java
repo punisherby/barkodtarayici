@@ -28,11 +28,7 @@ public class MainApplication extends NavigationApplication implements ReactAppli
       @Override
       protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
-                new MainReactPackage(),
-            new OpenSettingsPackage(),
-                new RCTTorchPackage(),
-                new RCTCapturePackage(),
-                new ReactNativeConfigPackage()
+                new MainReactPackage()
         );
       }
     };
@@ -52,7 +48,10 @@ public class MainApplication extends NavigationApplication implements ReactAppli
     // Add additional packages you require here
     // No need to add RnnPackage and MainReactPackage
     return Arrays.<ReactPackage>asList(
-            new RCTCapturePackage()
+            new RCTCapturePackage(),
+            new OpenSettingsPackage(),
+            new RCTTorchPackage(),
+            new ReactNativeConfigPackage()
     );
   }
 

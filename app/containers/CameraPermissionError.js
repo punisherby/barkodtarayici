@@ -8,6 +8,7 @@ import {
     ImageBackground
 } from 'react-native';
 import AppBaseContainer from "./AppBaseContainer";
+import OpenSettings from 'react-native-open-settings';
 
 class CameraPermissionError extends AppBaseContainer {
 
@@ -21,6 +22,7 @@ class CameraPermissionError extends AppBaseContainer {
                     <Text style={[styles.contentValue, styles.textWithPadding]}>
                         Allow access to your camera to start taking photos with AVA.
                     </Text>
+                    <Button light onPress={() => OpenSettings.openSettings()}><Text> Enable Camera Access </Text></Button>
                 </View>
             </ImageBackground>
         )
