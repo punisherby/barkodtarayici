@@ -1,10 +1,9 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking} from "react-native";
 import Barcode from 'react-native-smart-barcode';
 import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 import Torch from 'react-native-torch';
-import {Modal} from "react-native";
 
 export let rootNavigator = null;
 
@@ -108,6 +107,7 @@ class BarcodeScan extends AppBaseContainer {
                         <Text style={{paddingBottom: 50}}>Barkod Numarası {this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.code) : undefined}</Text>
 
                         <Button
+                            onPress={() => this._onGoogleSearchPressed(this.lastBarcodeData.data.code)}
                             buttonStyle={{marginBottom: 4}}
                             backgroundColor="#41bfeb"
                             borderRadius={4}
@@ -115,6 +115,7 @@ class BarcodeScan extends AppBaseContainer {
                             title={'Google\'da Ara'} />
 
                         <Button
+                            onPress={() => this._onGoogleProductSearchPressed(this.lastBarcodeData.data.code)}
                             buttonStyle={{marginBottom: 4}}
                             backgroundColor="#41bfeb"
                             borderRadius={4}
@@ -175,6 +176,32 @@ class BarcodeScan extends AppBaseContainer {
         setTimeout(() => {
             this._barCode.startScan()
         }, 500);
+    }
+
+    _onGoogleSearchPressed(searchString) {
+        searchString = "https://www.google.com.tr/search?q=" + searchString;
+        Linking.canOpenURL(searchString).then(supported => {
+            console.log(searchString);
+            if (supported){
+                return Linking.openURL(searchString);
+            }
+        }).catch(err => {
+            console.log(searchString);
+            console.log(err);
+        });
+    }
+
+    _onGoogleProductSearchPressed(searchString) {
+        searchString = "https://www.google.com.tr/search?tbm=shop&q=" + searchString;
+        Linking.canOpenURL(searchString).then(supported => {
+            console.log(searchString);
+            if (supported){
+                return Linking.openURL(searchString);
+            }
+        }).catch(err => {
+            console.log(searchString);
+            console.log(err);
+        });
     }
 }
 
