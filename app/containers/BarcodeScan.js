@@ -53,8 +53,10 @@ class BarcodeScan extends AppBaseContainer {
                             />
                         </TouchableOpacity>
                     </View>
-                    <View style={{flex: 0.9}}>
-                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 20, fontWeight: "bold", color: "white"}}>Barkod ve QR Kod Okuyucu</Text>
+                    <View style={{flex: 0.8}}>
+                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>Barkod ve QR Kod Okuyucu</Text>
+                    </View>
+                    <View style={{flex: 0.1}}>
                     </View>
                 </View>
 
@@ -98,6 +100,7 @@ class BarcodeScan extends AppBaseContainer {
             <Barcode style={{flex: 0.75, backgroundColor: "transparent"}}
                      ref={ component => this._barCode = component }
                      scannerRectWidth={300}
+                     barCodeTypes={[]}
                      onBarCodeRead={(data) => this._onBarCodeRead(data)}/>
         )
     }

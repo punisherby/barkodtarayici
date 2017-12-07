@@ -36,8 +36,10 @@ class Settings extends AppBaseContainer {
                             />
                         </TouchableOpacity>
                     </View>
-                    <View style={{flex: 0.9}}>
-                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 20, fontWeight: "bold", color: "white"}}>Ayarlar</Text>
+                    <View style={{flex: 0.8}}>
+                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>Ayarlar</Text>
+                    </View>
+                    <View style={{flex: 0.1}}>
                     </View>
                 </View>
 
