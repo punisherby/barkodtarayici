@@ -164,7 +164,7 @@ class BarcodeScan extends AppBaseContainer {
                             } else {
                                 setTimeout(() => {
                                     this.setState({cameraPhotoPermissionGranted: true});
-                                }, 300);
+                                }, 200);
                             }
                         });
                 }

@@ -1,23 +1,44 @@
-import App from "./App";
 import BarcodeScan from "./BarcodeScan";
 import PermissionError from "./PermissionError";
 import Drawer from "./drawer/Drawer";
+import QRCodeGenerator from "./QRCodeGenerator";
+import PreviousBarcodes from "./PreviousBarcodes";
+import Settings from "./Settings";
+import About from "./About";
+import Contact from "./Contact";
 
 export const SCREENS_MAP = {
-    App: {
-        name: 'barkod.App',
-        screen: App
+    Drawer: {
+        name: 'barkod.Drawer',
+        screen: Drawer
     },
     BarcodeScan: {
         name: 'barkod.BarcodeScan',
         screen: BarcodeScan
     },
+    QRCodeGenerator: {
+        name: 'barkod.QRCodeGenerator',
+        screen: QRCodeGenerator
+    },
+    PreviousBarcodes: {
+        name: 'barkod.PreviousBarcodes',
+        screen: PreviousBarcodes
+    },
+    Settings: {
+        name: 'barkod.Settings',
+        screen: Settings
+    },
+    About: {
+        name: 'barkod.About',
+        screen: About
+    },
+    Contact: {
+        name: 'barkod.Contact',
+        screen: Contact
+    },
     PermissionError: {
         name: 'barkod.PermissionError',
         screen: PermissionError
     },
-    Drawer: {
-        name: 'barkod.Drawer',
-        screen: Drawer
-    }
+
 };

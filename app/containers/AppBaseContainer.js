@@ -100,6 +100,20 @@ class AppBaseContainer extends Component {
         });
     }
 
+    _routeScreenByRootNavigator(screenName, props=null) {
+        rootNavigator.toggleDrawer({
+            side: 'left', // the side of the drawer since you can have two, 'left' / 'right'
+            animated: true, // does the toggle have transition animation or does it happen immediately (optional)
+            to: 'close' // optional, 'open' = open the drawer, 'closed' = close it, missing = the opposite of current state
+        });
+        rootNavigator.push({
+            screen: screenName,
+            passProps: {
+                navProps : props
+            }
+        });
+    }
+
     setStyle = (styleObj) => {
 
         if(!styleObj) {
