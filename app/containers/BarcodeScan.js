@@ -117,14 +117,21 @@ class BarcodeScan extends AppBaseContainer {
                 closeOnTouchOutside={false}>
                 <View style={{backgroundColor: "#00000044", flex: 1, height: null}}>
                     <View style={{borderRadius: 2, marginHorizontal: 20, marginTop: 40, marginBottom: 40, padding: 10, backgroundColor: "white",}}>
-                        <View style={{flexDirection: "row", padding: 15, paddingTop: 30}}>
+                        <View style={{paddingLeft: 15, paddingBottom: 15, paddingTop: 30}}>
                             <Text style={{fontWeight: "bold"}}>Barkod Tipi : </Text>
-                            <Text>{this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.type) : undefined}</Text>
+                            <Text style={{paddingRight: 15}}>{this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.type) : undefined}</Text>
                         </View>
-                        <View style={{flexDirection: "row", padding: 15, marginBottom: 25}}>
-                            <Text style={{fontWeight: "bold"}}>Barkod No : </Text>
-                            <Text>{this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.code) : undefined}</Text>
+                        <View style={{paddingLeft: 15, paddingBottom: 15}}>
+                            <Text style={{fontWeight: "bold"}}>Barkod No / İçerik : </Text>
+                            <Text style={{paddingRight: 15}}>{this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.code) : undefined}</Text>
                         </View>
+                        <Icon
+                            name='md-arrow-round-down'
+                            type='ionicon'
+                            size={22}
+                            containerStyle={{marginBottom: 15}}
+                            color="black"
+                        />
                         <Button
                             onPress={() => this._onGoogleSearchPressed(this.lastBarcodeData.data.code)}
                             buttonStyle={{marginBottom: 8}}
