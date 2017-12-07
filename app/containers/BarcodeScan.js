@@ -54,7 +54,7 @@ class BarcodeScan extends AppBaseContainer {
                         </TouchableOpacity>
                     </View>
                     <View style={{flex: 0.9}}>
-                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, color: "white"}}>Barkod ve QR Kod Okuyucu</Text>
+                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 20, fontWeight: "bold", color: "white"}}>Barkod ve QR Kod Okuyucu</Text>
                     </View>
                 </View>
 
@@ -191,9 +191,9 @@ class BarcodeScan extends AppBaseContainer {
 
     flashIconText() {
         if (this.state.torchMode === "on") {
-            return "Işık Kapat";
+            return "Feneri Kpt";
         } else if (this.state.torchMode === "off") {
-            return "Işık Aç";
+            return "Feneri Aç";
         }
     }
 
