@@ -10,7 +10,7 @@ import {
 import AppBaseContainer from "./AppBaseContainer";
 import OpenSettings from 'react-native-open-settings';
 
-class CameraPermissionError extends AppBaseContainer {
+class PermissionError extends AppBaseContainer {
 
     render() {
         return (
@@ -83,4 +83,4 @@ const styles = {
     }
 };
 
-export default (CameraPermissionError);
+export default (PermissionError);

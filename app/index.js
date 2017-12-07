@@ -17,6 +17,16 @@ export const startApp = () => {
         screen: {
             screen: SCREENS_MAP.App.name
         },
+        drawer: {
+            left: {
+                screen: SCREENS_MAP.Drawer.name
+            },
+            style: {
+                drawerShadow: 'NO',
+                leftDrawerWidth: 87
+            },
+            disableOpenGesture: true
+        },
         animationType: 'fade'
     });
 }

@@ -54,12 +54,12 @@ class App extends AppBaseContainer {
           {instructions}
         </Text>
 
-        <Button full onPress={() => this._checkCameraPermission()}><Text> Primary </Text></Button>
+        <Button full onPress={() => this._checkPermission()}><Text> Primary </Text></Button>
       </View>
     );
   }
 
-  _checkCameraPermission() {
+  _checkPermission() {
       Permissions.check('camera')
           .then(response => {
               if (response === "undetermined") {
@@ -71,7 +71,7 @@ class App extends AppBaseContainer {
                   .then(response => {
                       if (response === "denied" || response === "restricted") {
                           if (!this.barcodeScanFirstTimeClick) {
-                              this.pushToActiveScreenStack(this.getScreenMap().CameraPermissionError.name)
+                              this.pushToActiveScreenStack(this.getScreenMap().PermissionError.name)
                           }
                       } else {
                           this.pushToActiveScreenStack(this.getScreenMap().BarcodeScan.name)

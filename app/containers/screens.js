@@ -1,6 +1,7 @@
 import App from "./App";
-import BarcodeScan from "./BarcodeScan"
-import CameraPermissionError from "./CameraPermissionError"
+import BarcodeScan from "./BarcodeScan";
+import PermissionError from "./PermissionError";
+import Drawer from "./drawer/Drawer";
 
 export const SCREENS_MAP = {
     App: {
@@ -11,8 +12,12 @@ export const SCREENS_MAP = {
         name: 'barkod.BarcodeScan',
         screen: BarcodeScan
     },
-    CameraPermissionError: {
-        name: 'barkod.CameraPermissionError',
-        screen: CameraPermissionError
+    PermissionError: {
+        name: 'barkod.PermissionError',
+        screen: PermissionError
+    },
+    Drawer: {
+        name: 'barkod.Drawer',
+        screen: Drawer
     }
 };

@@ -84,6 +84,14 @@ class BarcodeScan extends AppBaseContainer {
                         source={this.flashIcon()}
                     />
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={{flex: 0.1, padding: 20}}
+                    onPress={this.openDrawer()}
+                >
+                    <Image
+                        source={this.flashIcon()}
+                    />
+                </TouchableOpacity>
               <Barcode style={{flex: 0.6, backgroundColor: "white"}}
                        ref={ component => this._barCode = component }
                        scannerRectWidth={300}
