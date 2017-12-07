@@ -22,7 +22,13 @@ class PermissionError extends AppBaseContainer {
                     <Text style={[styles.contentValue, styles.textWithPadding]}>
                         Allow access to your camera to start taking photos with AVA.
                     </Text>
-                    <Button light onPress={() => OpenSettings.openSettings()}><Text> Enable Camera Access </Text></Button>
+                    <Button
+                        onPress={() => OpenSettings.openSettings()}
+                        buttonStyle={{marginBottom: 4}}
+                        backgroundColor="#41bfeb"
+                        borderRadius={4}
+                        icon={{name: 'shopping-cart', type: 'font-awesome'}}
+                        title={'Kamera Yetkisine İzin Ver'} />
                 </View>
             </ImageBackground>
         )

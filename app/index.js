@@ -15,7 +15,7 @@ export const startApp = () => {
 
     Navigation.startSingleScreenApp({
         screen: {
-            screen: SCREENS_MAP.App.name
+            screen: SCREENS_MAP.BarcodeScan.name
         },
         drawer: {
             left: {

@@ -52,7 +52,9 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Kamera yetkisi gerekiyor</string>
+	<string>Barkod okuyucu için kamera izni gerekmektedir</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>QR kod oluşturmak için yetki gerekmektedir</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>

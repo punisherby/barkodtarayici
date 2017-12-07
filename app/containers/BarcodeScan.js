@@ -4,6 +4,7 @@ import Barcode from 'react-native-smart-barcode';
 import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 import Torch from 'react-native-torch';
+import Permissions from 'react-native-permissions';
 
 export let rootNavigator = null;
 
@@ -16,6 +17,7 @@ class BarcodeScan extends AppBaseContainer {
     };
 
     state = {
+        cameraPhotoPermissionGranted : false,
         torchMode: "off",
         barcodeDetected : false
     };
@@ -29,6 +31,9 @@ class BarcodeScan extends AppBaseContainer {
     }
 
     componentDidMount() {
+        setTimeout(() => {
+            this._checkPermission();
+        }, 300);
     }
 
     componentWillUnmount() {
@@ -53,7 +58,7 @@ class BarcodeScan extends AppBaseContainer {
                     </View>
                 </View>
 
-                <View style={{flex: 0.15, padding: 8, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                <View style={{flex: 0.15, padding: 4, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
                     <TouchableOpacity onPress={this.switchTorch.bind(this)} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
                         <Icon
                             name={this.flashIcon()}
@@ -82,13 +87,19 @@ class BarcodeScan extends AppBaseContainer {
                         <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Geçmiş</Text>
                     </TouchableOpacity>
                 </View>
-                <Barcode style={{flex: 0.85, backgroundColor: "transparent"}}
-                         ref={ component => this._barCode = component }
-                         scannerRectWidth={300}
-                         onBarCodeRead={(data) => this._onBarCodeRead(data)}/>
+                {this.state.cameraPhotoPermissionGranted ? this._renderBarcodeScanner() : undefined}
                 {this._renderBarcodeFoundModal()}
             </View>
         );
+    }
+
+    _renderBarcodeScanner() {
+        return (
+            <Barcode style={{flex: 0.75, backgroundColor: "transparent"}}
+                     ref={ component => this._barCode = component }
+                     scannerRectWidth={300}
+                     onBarCodeRead={(data) => this._onBarCodeRead(data)}/>
+        )
     }
 
     _renderBarcodeFoundModal() {
@@ -133,6 +144,26 @@ class BarcodeScan extends AppBaseContainer {
                 </View>
             </Modal>
         )
+    }
+
+    _checkPermission() {
+        Permissions.request('camera')
+            .then(response => {
+                if (response === "denied" || response === "restricted") {
+                    this.pushToActiveScreenStack(this.getScreenMap().PermissionError.name)
+                } else {
+                    Permissions.request('photo')
+                        .then(response2 => {
+                            if (response2 === "denied" || response2 === "restricted") {
+                                this.pushToActiveScreenStack(this.getScreenMap().PermissionError.name)
+                            } else {
+                                setTimeout(() => {
+                                    this.setState({cameraPhotoPermissionGranted: true});
+                                }, 300);
+                            }
+                        });
+                }
+            });
     }
 
     switchTorch() {
