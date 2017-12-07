@@ -1,9 +1,10 @@
 import React, {Component} from "react";
 import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text} from "react-native";
 import Barcode from 'react-native-smart-barcode';
-import {Icon} from "react-native-elements";
+import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 import Torch from 'react-native-torch';
+import {Modal} from "react-native";
 
 export let rootNavigator = null;
 
@@ -15,12 +16,12 @@ class BarcodeScan extends AppBaseContainer {
         screenBackgroundImageName: "background-photo"
     };
 
-    barcodeDetected = false;
-
     state = {
-        reportDate: null,
-        torchMode: "off"
+        torchMode: "off",
+        barcodeDetected : false
     };
+
+    lastBarcodeData;
 
     constructor(props){
         super(props);
@@ -32,49 +33,6 @@ class BarcodeScan extends AppBaseContainer {
     }
 
     componentWillUnmount() {
-    }
-
-    _onBarCodeRead(e) {
-        if (this.barcodeDetected === true) {
-            return;
-        }
-        this.barcodeDetected = true;
-        this._barCode.stopScan();
-
-        Alert.alert(
-            'Barcode Detected',
-            e.nativeEvent.data.code,
-            [
-                {text: 'OK', onPress: () => this._resetBarcodeScan()},
-            ],
-            { cancelable: false }
-        )
-    }
-
-    switchTorch() {
-        if (this.state.torchMode === "on") {
-            this.setState({torchMode: "off"});
-            Platform.OS == "ios" ? Torch.switchState(false) : NativeModules.CaptureModule.stopFlash();
-        } else if (this.state.torchMode === "off") {
-            this.setState({torchMode: "on"});
-            Platform.OS == "ios" ? Torch.switchState(true) : NativeModules.CaptureModule.startFlash();
-        }
-    }
-
-    flashIcon() {
-        if (this.state.torchMode === "on") {
-            return "flashlight-off";
-        } else if (this.state.torchMode === "off") {
-            return "flashlight";
-        }
-    }
-
-    flashIconText() {
-        if (this.state.torchMode === "on") {
-            return "Işık Kapat";
-        } else if (this.state.torchMode === "off") {
-            return "Işık Aç";
-        }
     }
 
     render() {
@@ -95,6 +53,7 @@ class BarcodeScan extends AppBaseContainer {
                         <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, color: "white"}}>Barkod ve QR Kod Okuyucu</Text>
                     </View>
                 </View>
+
                 <View style={{flex: 0.15, padding: 8, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
                     <TouchableOpacity onPress={this.switchTorch.bind(this)} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
                         <Icon
@@ -124,21 +83,98 @@ class BarcodeScan extends AppBaseContainer {
                         <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Geçmiş</Text>
                     </TouchableOpacity>
                 </View>
-              <Barcode style={{flex: 0.85, backgroundColor: "transparent"}}
-                       ref={ component => this._barCode = component }
-                       scannerRectWidth={300}
-                       onBarCodeRead={(data) => this._onBarCodeRead(data)}/>
+                <Barcode style={{flex: 0.85, backgroundColor: "transparent"}}
+                         ref={ component => this._barCode = component }
+                         scannerRectWidth={300}
+                         onBarCodeRead={(data) => this._onBarCodeRead(data)}/>
+                {this._renderBarcodeFoundModal()}
             </View>
         );
     }
 
+    _renderBarcodeFoundModal() {
+        return (
+            <Modal
+                offset={50}
+                visible={this.state.barcodeDetected}
+                transparent={true}
+                onRequestClose={() => {
+                }}
+                animationType={'fade'}
+                closeOnTouchOutside={false}>
+                <View style={{backgroundColor: "#00000044", flex: 1, height: null}}>
+                    <View style={{borderRadius: 2, marginHorizontal: 20, marginTop: 40, marginBottom: 40, padding: 10, backgroundColor: "white",}}>
+                        <Text style={{paddingBottom: 50}}>Barkod Tipi {this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.type) : undefined}</Text>
+                        <Text style={{paddingBottom: 50}}>Barkod Numarası {this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.code) : undefined}</Text>
+
+                        <Button
+                            buttonStyle={{marginBottom: 4}}
+                            backgroundColor="#41bfeb"
+                            borderRadius={4}
+                            icon={{name: 'google', type: 'font-awesome'}}
+                            title={'Google\'da Ara'} />
+
+                        <Button
+                            buttonStyle={{marginBottom: 4}}
+                            backgroundColor="#41bfeb"
+                            borderRadius={4}
+                            icon={{name: 'shopping-cart', type: 'font-awesome'}}
+                            title={'Ürün Olarak Ara'} />
+
+                        <Button
+                            onPress={() => this._resetBarcodeScan()}
+                            buttonStyle={{marginBottom: 4}}
+                            backgroundColor="#41bfeb"
+                            borderRadius={4}
+                            icon={{name: 'close', type: 'font-awesome'}}
+                            title={'Çıkış / Yeniden Ara'} />
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    switchTorch() {
+        if (this.state.torchMode === "on") {
+            this.setState({torchMode: "off"});
+            Platform.OS == "ios" ? Torch.switchState(false) : NativeModules.CaptureModule.stopFlash();
+        } else if (this.state.torchMode === "off") {
+            this.setState({torchMode: "on"});
+            Platform.OS == "ios" ? Torch.switchState(true) : NativeModules.CaptureModule.startFlash();
+        }
+    }
+
+    flashIcon() {
+        if (this.state.torchMode === "on") {
+            return "flashlight-off";
+        } else if (this.state.torchMode === "off") {
+            return "flashlight";
+        }
+    }
+
+    flashIconText() {
+        if (this.state.torchMode === "on") {
+            return "Işık Kapat";
+        } else if (this.state.torchMode === "off") {
+            return "Işık Aç";
+        }
+    }
+
+    _onBarCodeRead(e) {
+        if (this.state.barcodeDetected === true) {
+            return;
+        }
+        this.lastBarcodeData = e.nativeEvent;
+        this.setState({barcodeDetected: true, torchMode: "off"});
+        this._barCode.stopScan();
+    }
 
     _resetBarcodeScan() {
-        //wait for 1 second between each barcode event
+        this.setState({barcodeDetected: false});
+
         setTimeout(() => {
-            this.barcodeDetected = false;
             this._barCode.startScan()
-        }, 1000);
+        }, 500);
     }
 }
 
