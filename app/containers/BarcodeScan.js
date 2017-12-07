@@ -114,12 +114,17 @@ class BarcodeScan extends AppBaseContainer {
                 closeOnTouchOutside={false}>
                 <View style={{backgroundColor: "#00000044", flex: 1, height: null}}>
                     <View style={{borderRadius: 2, marginHorizontal: 20, marginTop: 40, marginBottom: 40, padding: 10, backgroundColor: "white",}}>
-                        <Text style={{paddingBottom: 50}}>Barkod Tipi {this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.type) : undefined}</Text>
-                        <Text style={{paddingBottom: 50}}>Barkod Numarası {this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.code) : undefined}</Text>
-
+                        <View style={{flexDirection: "row", padding: 15, paddingTop: 30}}>
+                            <Text style={{fontWeight: "bold"}}>Barkod Tipi : </Text>
+                            <Text>{this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.type) : undefined}</Text>
+                        </View>
+                        <View style={{flexDirection: "row", padding: 15, marginBottom: 25}}>
+                            <Text style={{fontWeight: "bold"}}>Barkod No : </Text>
+                            <Text>{this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.code) : undefined}</Text>
+                        </View>
                         <Button
                             onPress={() => this._onGoogleSearchPressed(this.lastBarcodeData.data.code)}
-                            buttonStyle={{marginBottom: 4}}
+                            buttonStyle={{marginBottom: 8}}
                             backgroundColor="#41bfeb"
                             borderRadius={4}
                             icon={{name: 'google', type: 'font-awesome'}}
@@ -127,7 +132,7 @@ class BarcodeScan extends AppBaseContainer {
 
                         <Button
                             onPress={() => this._onGoogleProductSearchPressed(this.lastBarcodeData.data.code)}
-                            buttonStyle={{marginBottom: 4}}
+                            buttonStyle={{marginBottom: 8}}
                             backgroundColor="#41bfeb"
                             borderRadius={4}
                             icon={{name: 'shopping-cart', type: 'font-awesome'}}
@@ -135,11 +140,11 @@ class BarcodeScan extends AppBaseContainer {
 
                         <Button
                             onPress={() => this._resetBarcodeScan()}
-                            buttonStyle={{marginBottom: 4}}
+                            buttonStyle={{marginBottom: 20}}
                             backgroundColor="#41bfeb"
                             borderRadius={4}
                             icon={{name: 'close', type: 'font-awesome'}}
-                            title={'Çıkış / Yeniden Ara'} />
+                            title={'Çıkış / Yeni Arama'} />
                     </View>
                 </View>
             </Modal>
