@@ -3,6 +3,7 @@ package com.barkodtarayici;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.opensettings.OpenSettingsPackage;
 import com.cubicphuse.RCTTorch.RCTTorchPackage;
 import com.reactnativecomponent.barcode.RCTCapturePackage;
@@ -51,7 +52,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new RCTCapturePackage(),
             new OpenSettingsPackage(),
             new RCTTorchPackage(),
-            new ReactNativeConfigPackage()
+            new ReactNativeConfigPackage(),
+            new VectorIconsPackage()
     );
   }
 

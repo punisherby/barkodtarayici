@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-import { Container, Header, Content, Button } from 'native-base';
+import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 import Permissions from 'react-native-permissions';
 

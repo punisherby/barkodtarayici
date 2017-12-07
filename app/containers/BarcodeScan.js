@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text} from "react-native";
 import Barcode from 'react-native-smart-barcode';
-import { Container, Header, Content, Button } from 'native-base';
+import {Icon} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 import Torch from 'react-native-torch';
 
@@ -62,37 +62,69 @@ class BarcodeScan extends AppBaseContainer {
     }
 
     flashIcon() {
-        let icon;
-
         if (this.state.torchMode === "on") {
-            icon = require('../images/ic_flash_on_white.png');
+            return "flashlight-off";
         } else if (this.state.torchMode === "off") {
-            icon = require('../images/ic_flash_off_white.png');
+            return "flashlight";
         }
+    }
 
-        return icon;
+    flashIconText() {
+        if (this.state.torchMode === "on") {
+            return "Işık Kapat";
+        } else if (this.state.torchMode === "off") {
+            return "Işık Aç";
+        }
     }
 
     render() {
         return (
-            <View style={{flex: 1, backgroundColor: "blue"}}>
-                <TouchableOpacity
-                    style={{flex: 0.1, padding: 20}}
-                    onPress={this.switchTorch.bind(this)}
-                >
-                    <Image
-                        source={this.flashIcon()}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{flex: 0.1, padding: 20}}
-                    onPress={this.openDrawer()}
-                >
-                    <Image
-                        source={this.flashIcon()}
-                    />
-                </TouchableOpacity>
-              <Barcode style={{flex: 0.6, backgroundColor: "white"}}
+            <View style={{flex: 1, backgroundColor: "white", paddingTop: Platform.OS == "ios" ? 20 : 0}}>
+                <View style={{flex: 0.1, backgroundColor: "#41bfeb", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                    <View style={{flex: 0.1, paddingLeft: 15, paddingRight: 10}}>
+                        <TouchableOpacity onPress = {() => this.openDrawer()}>
+                            <Icon
+                                name='md-menu'
+                                type='ionicon'
+                                size={40}
+                                color="white"
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{flex: 0.9}}>
+                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, color: "white"}}>Barkod ve QR Kod Okuyucu</Text>
+                    </View>
+                </View>
+                <View style={{flex: 0.15, padding: 8, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                    <TouchableOpacity onPress={this.switchTorch.bind(this)} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
+                        <Icon
+                            name={this.flashIcon()}
+                            type='material-community'
+                            size={36}
+                            color="#41bfeb"
+                        />
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>{this.flashIconText()}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.switchTorch.bind(this)} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
+                        <Icon
+                            name="settings"
+                            type='simple-line-icon'
+                            size={36}
+                            color="#41bfeb"
+                        />
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Ayarlar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.switchTorch.bind(this)} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
+                        <Icon
+                            name="history"
+                            type='material-community'
+                            size={36}
+                            color="#41bfeb"
+                        />
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Geçmiş</Text>
+                    </TouchableOpacity>
+                </View>
+              <Barcode style={{flex: 0.85, backgroundColor: "transparent"}}
                        ref={ component => this._barCode = component }
                        scannerRectWidth={300}
                        onBarCodeRead={(data) => this._onBarCodeRead(data)}/>
