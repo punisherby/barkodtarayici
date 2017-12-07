@@ -27,7 +27,10 @@ export const startApp = () => {
             },
             disableOpenGesture: true
         },
-        animationType: 'fade'
+        appStyle: {
+            orientation: 'portrait',
+        },
+        animationType: 'fade',
     });
 }
 
