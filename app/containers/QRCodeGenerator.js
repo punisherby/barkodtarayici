@@ -15,7 +15,7 @@ class QRCodeGenerator extends AppBaseContainer {
     };
 
     state = {
-        text: 'Örn : http://www.facebook.com',
+        text: '',
     };
 
     constructor(props){
@@ -82,6 +82,8 @@ class QRCodeGenerator extends AppBaseContainer {
                             style={styles.input}
                             onChangeText={(text) => this.setState({text: text})}
                             value={this.state.text}
+                            autoCapitalize="none"
+                            placeholder="Örn : http://www.facebook.com"
                         />
                         <QRCode
                             getRef={(c) => (this.svg = c)}
