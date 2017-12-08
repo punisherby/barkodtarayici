@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, BackHandler} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, BackHandler, AsyncStorage} from "react-native";
 import Barcode from 'react-native-smart-barcode';
 import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
@@ -223,6 +223,8 @@ class BarcodeScan extends AppBaseContainer {
         this.lastBarcodeData = e.nativeEvent;
         this.setState({barcodeDetected: true, torchMode: "off"});
         this._barCode.stopScan();
+
+        this._saveItemAsHistoryItem(e.nativeEvent);
     }
 
     _resetBarcodeScan() {
@@ -272,6 +274,15 @@ class BarcodeScan extends AppBaseContainer {
         }
         this.lastBackPagePressedTime = currentTime;
         return true;
+    }
+
+    async _saveItemAsHistoryItem(barcodeItem) {
+        let barcodeObj = {...barcodeItem.data, date : DateHelper.getCurrentDate()}
+        try {
+            await AsyncStorage.setItem('barcodeScanHistory' , JSON.stringify(barcodeObj));
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

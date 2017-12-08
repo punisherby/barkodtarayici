@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, AsyncStorage} from "react-native";
 import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 
@@ -11,12 +11,26 @@ class PreviousBarcodes extends AppBaseContainer {
         screenBackgroundImageName: "background-photo"
     };
 
+    state = {
+        barcodeScanHistory: null
+    }
+
     constructor(props){
         super(props);
         this.setStyle(this.navigatorStyle);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        try {
+            const value = await AsyncStorage.getItem('barcodeScanHistory');
+            console.log(value);
+            if (value !== null){
+                console.log(value);
+                this.setState({barcodeScanHistory: value});
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     componentWillUnmount() {
@@ -44,7 +58,7 @@ class PreviousBarcodes extends AppBaseContainer {
                 </View>
 
                 <View style={{flex: 0.9, padding: 4, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
-
+                    <Text>{this.state.barcodeScanHistory ? this.state.barcodeScanHistory : "No barcode Could Found"}</Text>
                 </View>
             </View>
         );
