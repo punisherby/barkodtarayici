@@ -43,7 +43,7 @@ class Settings extends AppBaseContainer {
                     </View>
                 </View>
 
-                <View style={{flex: 0.15, padding: 4, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                <View style={{flex: 0.9, padding: 4, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
 
                 </View>
             </View>

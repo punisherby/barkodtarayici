@@ -3,6 +3,7 @@ package com.barkodtarayici;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.opensettings.OpenSettingsPackage;
 import com.cubicphuse.RCTTorch.RCTTorchPackage;
@@ -13,6 +14,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.reactnativenavigation.NavigationApplication;
+import com.rnfs.RNFSPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +55,9 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new OpenSettingsPackage(),
             new RCTTorchPackage(),
             new ReactNativeConfigPackage(),
-            new VectorIconsPackage()
+            new VectorIconsPackage(),
+            new SvgPackage(),
+            new RNFSPackage()
     );
   }
 
