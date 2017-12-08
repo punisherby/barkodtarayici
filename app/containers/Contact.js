@@ -59,6 +59,7 @@ class Contact extends AppBaseContainer {
                         barkodtarayicimdestek@gmail.com
                     </Text>
                     <Text style={{paddingTop: 30, textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>
+                        Burak YILMAZ {"\n"}{"\n"}
                         Istanbul, Turkey
                     </Text>
                 </View>
