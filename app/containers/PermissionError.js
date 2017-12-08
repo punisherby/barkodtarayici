@@ -17,13 +17,20 @@ const permissionEnablementText = Platform.OS == "ios"
 
 class PermissionError extends AppBaseContainer {
 
+    static navigatorStyle = {
+        tabBarHidden: true,
+        navBarHidden : true,
+        screenBackgroundImageName: "background-photo"
+    };
+
+    constructor(props){
+        super(props);
+        this.setStyle(this.navigatorStyle);
+    }
+
     componentWillMount() {
         if (Platform.OS == "android") {
-
-            this.hardwareBackPressListener = BackHandler.addEventListener('hardwareBackPress', function() {
-                this.pushToActiveScreenStack(this.getScreenMap().BarcodeScan.name);
-                return;
-            });
+            this.hardwareBackPressListener = BackHandler.addEventListener('hardwareBackPress', this._routeToPreviousPage.bind(this));
         }
     }
 
@@ -57,6 +64,11 @@ class PermissionError extends AppBaseContainer {
                 </View>
             </View>
         )
+    }
+
+    _routeToPreviousPage() {
+        this.pushToActiveScreenStack(this.getScreenMap().BarcodeScan.name);
+        return true;
     }
 }
 

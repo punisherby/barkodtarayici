@@ -1,10 +1,11 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, BackHandler} from "react-native";
 import Barcode from 'react-native-smart-barcode';
 import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 import Torch from 'react-native-torch';
 import Permissions from 'react-native-permissions';
+import DateHelper from "../helper/DateHelper";
 
 export let rootNavigator = null;
 
@@ -23,6 +24,7 @@ class BarcodeScan extends AppBaseContainer {
     };
 
     lastBarcodeData;
+    lastBackPagePressedTime;
 
     constructor(props){
         super(props);
@@ -36,7 +38,16 @@ class BarcodeScan extends AppBaseContainer {
         }, 300);
     }
 
+    componentWillMount() {
+        if (Platform.OS == "android") {
+            this.hardwareBackPressListener = BackHandler.addEventListener('hardwareBackPress', this._blockBackPage.bind(this));
+        }
+    }
+
     componentWillUnmount() {
+        if (Platform.OS == "android") {
+            this.hardwareBackPressListener.remove();
+        }
     }
 
     render() {
@@ -172,9 +183,7 @@ class BarcodeScan extends AppBaseContainer {
                             if (response2 === "denied" || response2 === "restricted") {
                                 this.pushToActiveScreenStack(this.getScreenMap().PermissionError.name)
                             } else {
-                                setTimeout(() => {
                                     this.setState({cameraPhotoPermissionGranted: true});
-                                }, 200);
                             }
                         });
                 }
@@ -248,6 +257,21 @@ class BarcodeScan extends AppBaseContainer {
             console.log(searchString);
             console.log(err);
         });
+    }
+
+    _blockBackPage() {
+        let currentTime = DateHelper.getTimeInMilliSeconds();
+        if (this.lastBackPagePressedTime) {
+            if (currentTime - this.lastBackPagePressedTime < 500) {
+                BackHandler.exitApp();
+                return false;
+            } else {
+                this.lastBackPagePressedTime = currentTime;
+                return true;
+            }
+        }
+        this.lastBackPagePressedTime = currentTime;
+        return true;
     }
 }
 
