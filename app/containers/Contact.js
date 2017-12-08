@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking} from "react-native";
 import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
+import * as Animatable from 'react-native-animatable';
 
 class Contact extends AppBaseContainer {
 
@@ -43,8 +44,23 @@ class Contact extends AppBaseContainer {
                     </View>
                 </View>
 
-                <View style={{flex: 0.9, padding: 4, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                <View style={{flex: 0.2, padding: 10, flexDirection: "column", alignItems: "center", justifyContent: "flex-end"}}>
+                    <Icon
+                        name='contact-mail'
+                        type='material-community'
+                        size={50}
+                        color="#41bfeb"
+                    />
+                </View>
 
+                <View style={{flex: 0.7, padding: 10, flexDirection: "column", alignItems: "center", justifyContent: "flex-start"}}>
+                    <Animatable.Text style={{fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "#41bfeb"}} animation="flipInX" delay={300} duration={1000} iterationCount={1} direction="alternate">İletişim Bilgileri</Animatable.Text>
+                    <Text style={{paddingTop: 20, textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>
+                        barkodtarayicimdestek@gmail.com
+                    </Text>
+                    <Text style={{paddingTop: 30, textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>
+                        Istanbul, Turkey
+                    </Text>
                 </View>
             </View>
         );
