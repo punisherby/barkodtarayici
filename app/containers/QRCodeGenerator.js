@@ -4,6 +4,7 @@ import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from "react-native-fs"
+import {socialShareService} from "../services/SocialShareService";
 
 class QRCodeGenerator extends AppBaseContainer {
 
@@ -52,7 +53,7 @@ class QRCodeGenerator extends AppBaseContainer {
                 </View>
 
                 <View style={{flex: 0.15, padding: 4, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
-                    <TouchableOpacity onPress={() => this.pushToActiveScreenStack(this.getScreenMap().Settings.name)} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
+                    <TouchableOpacity onPress={() => this.share()} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
                         <Icon
                             name="share"
                             type='font-awesome'
@@ -102,6 +103,14 @@ class QRCodeGenerator extends AppBaseContainer {
                 .then(() => {
                     ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
                 })
+        })
+    }
+
+    share() {
+        let dataImage = "data:image/png;base64,";
+        this.svg.toDataURL((data) => {
+            dataImage += data;
+            socialShareService.startNativeSharing(dataImage)
         })
     }
 }

@@ -17,6 +17,7 @@
 		"react-native-open-settings": "^1.0.1",
 		"react-native-permissions": "^1.0.4",
 		"react-native-qrcode-svg": "^5.0.5",
+		"react-native-share": "^1.0.23",
 		"react-native-smart-barcode": "^1.0.6",
 		"react-native-svg": "^6.0.1-rc.1",
 		"react-native-torch": "^1.0.1",
