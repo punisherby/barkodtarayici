@@ -85,7 +85,7 @@ class QRCodeGenerator extends AppBaseContainer {
                         />
                         <QRCode
                             getRef={(c) => (this.svg = c)}
-                            value={this.state.text}
+                            value={this.state.text ? this.state.text : " "}
                             size={200}
                             color='black'/>
                     </View>
@@ -101,7 +101,14 @@ class QRCodeGenerator extends AppBaseContainer {
                     return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+"/qrcode_321312.png", 'photo')
                 })
                 .then(() => {
-                    ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
+                    if (Platform.OS == "ios") {
+
+                    }else {
+                        ToastAndroid.show('QR Kod fotoğraf kütüphanenize kayıt edildi!', ToastAndroid.SHORT)
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
                 })
         })
     }

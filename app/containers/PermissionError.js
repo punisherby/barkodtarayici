@@ -5,88 +5,59 @@ import {
     StyleSheet,
     Text,
     View,
-    ImageBackground
+    ImageBackground,
+    BackHandler
 } from 'react-native';
 import AppBaseContainer from "./AppBaseContainer";
 import OpenSettings from 'react-native-open-settings';
 
+const permissionEnablementText = Platform.OS == "ios"
+    ? "Yukarıdaki Buton yardımı ile uygulama ayarlarınıza giderek, uygulama için gerekli Kamera ve Fotoğraf Galerisi yetkisine izin vermeniz gerekmektedir."
+    : "Yukarıdaki Buton yardımı ile uygulama ayarlarınıza giderek, izinler sekmesinden uygulama için gerekli Kamera ve Depolama yetkisine izin vermeniz gerekmektedir.";
+
 class PermissionError extends AppBaseContainer {
+
+    componentWillMount() {
+        if (Platform.OS == "android") {
+
+            this.hardwareBackPressListener = BackHandler.addEventListener('hardwareBackPress', function() {
+                this.pushToActiveScreenStack(this.getScreenMap().BarcodeScan.name);
+                return;
+            });
+        }
+    }
+
+    componentWillUnmount() {
+        if (Platform.OS == "android") {
+            this.hardwareBackPressListener.remove();
+        }
+    }
 
     render() {
         return (
-            <ImageBackground source={require("../images/gradient-background.png")} style={styles.container}>
-                <View style={styles.contentContainer}>
-                    <Text style={[styles.contentValue, styles.textWithPadding]}>
-                        BARKOD TARAYICI KULLANABILMENIZ İÇİN KAMERA İZNİ GEREKMEKTEDİR.
-                    </Text>
-                    <Text style={[styles.contentValue, styles.textWithPadding]}>
-                        Allow access to your camera to start taking photos with AVA.
-                    </Text>
-                    <Button
-                        onPress={() => OpenSettings.openSettings()}
-                        buttonStyle={{marginBottom: 4}}
-                        backgroundColor="#41bfeb"
-                        borderRadius={4}
-                        icon={{name: 'shopping-cart', type: 'font-awesome'}}
-                        title={'Kamera Yetkisine İzin Ver'} />
+            <View style={{flex: 1, backgroundColor: "#41bfeb"}}>
+                <View style={{flex: 1, justifyContent: "center", alignItems:"center", padding: 10}}>
+                    <View style={{flex: 0.3, justifyContent: "flex-start"}}>
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>
+                            YETKİ HATASI, İZNİNİZ GEREKLİ
+                        </Text>
+                    </View>
+                    <View style={{flex: 0.7, justifyContent: "flex-start"}}>
+                        <Button
+                            onPress={() => OpenSettings.openSettings()}
+                            buttonStyle={{marginBottom: 8}}
+                            backgroundColor="#EB1245"
+                            borderRadius={4}
+                            icon={{name: 'settings', type: 'simple-line-icon'}}
+                            title={'UYGULAMA İZİN AYARLARI'} />
+                        <Text style={{paddingTop: 15, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>
+                            {permissionEnablementText}
+                        </Text>
+                    </View>
                 </View>
-            </ImageBackground>
+            </View>
         )
     }
 }
-
-const styles = {
-    container: {
-        flex: 1,
-        width: null,
-        height: null,
-        backgroundColor: "transparent"
-    },
-    contentContainer: {
-        alignItems: "center",
-        justifyContent: 'center',
-        marginRight: 50,
-        marginLeft: 50,
-        flex:0.5
-    },
-    textWithPadding: {
-        paddingTop: 30,
-        flexDirection: "row",
-        flexWrap: "wrap",
-        alignItems: "flex-start"
-    },
-    contentValue: {
-        color: "white",
-        fontSize: 20
-    },
-    headerCloseIcon: {
-        alignSelf: "flex-end",
-        justifyContent: "flex-start",
-        marginRight: 15,
-        marginTop: 15,
-        flex:0.1
-    },
-    footerContainer: {
-        flex: 0.4,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    cameraButton: {
-        width: 72,
-        height: 72,
-        borderWidth: 6,
-        borderRadius: 40,
-        backgroundColor: "transparent",
-        borderColor: 'white',
-        marginTop: 30,
-    },
-    cameraButtonIcon: {
-        paddingLeft: 4.5
-    },
-    logWeightButton: {
-        alignSelf: "center",
-        marginTop: 40
-    }
-};
 
 export default (PermissionError);
