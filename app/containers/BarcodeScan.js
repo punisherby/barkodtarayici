@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, BackHandler, AsyncStorage} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, BackHandler, AsyncStorage, Clipboard} from "react-native";
 import Barcode from 'react-native-smart-barcode';
 import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
@@ -225,6 +225,8 @@ class BarcodeScan extends AppBaseContainer {
         this._barCode.stopScan();
 
         this._saveItemAsHistoryItem(e.nativeEvent);
+
+        Clipboard.setString(e.nativeEvent.data.code);
     }
 
     _resetBarcodeScan() {

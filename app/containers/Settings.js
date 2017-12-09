@@ -1,7 +1,8 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, AsyncStorage} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, AsyncStorage, Clipboard} from "react-native";
 import {Icon, Button, CheckBox, Divider} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
+import {optionsService} from "../services/OptionsService";
 
 class Settings extends AppBaseContainer {
 
@@ -12,8 +13,7 @@ class Settings extends AppBaseContainer {
     };
 
     state = {
-        defaultOptions: [true, false, false, true],
-        options: [true, false, false, true]
+        options: []
     }
 
     constructor(props){
@@ -21,21 +21,15 @@ class Settings extends AppBaseContainer {
         this.setStyle(this.navigatorStyle);
     }
 
-    async componentDidMount() {
-        try {
-            const value = await AsyncStorage.getItem('options');
-            if (value !== null){
-                this.setState({options: JSON.parse(value)});
-            } else {
-                this.setState({options: this.state.defaultOptions});
-            }
-        } catch (error) {
-            console.log(error);
-            this.setState({options: this.state.defaultOptions});
-        }
+    componentDidMount() {
+        optionsService.getOptions()
+            .then((result) => {
+                this.setState({options: result});
+            })
     }
 
-    componentWillUnmount() {
+    componentWillMount() {
+        this.state.options = optionsService.getDefaultOptions();
     }
 
     render() {
@@ -138,17 +132,11 @@ class Settings extends AppBaseContainer {
         );
     }
 
-    async _setNewOptions(optionNumber){
-        let tmpOptionArray = {...this.state.options};
-        tmpOptionArray[optionNumber] = !tmpOptionArray[optionNumber];
-
-        this.setState({options: tmpOptionArray})
-
-        try {
-            await AsyncStorage.setItem('options' , JSON.stringify(tmpOptionArray));
-        } catch (error) {
-            console.log(error);
-        }
+    _setNewOptions(optionNumber){
+        optionsService.setOptions(optionNumber)
+            .then((result) => {
+                this.setState({options: result});
+            })
     }
 
     _defaultSettingsConfirmation() {
@@ -164,7 +152,10 @@ class Settings extends AppBaseContainer {
     }
 
     _defaultSettings() {
-        this.setState({options: this.state.defaultOptions});
+        optionsService.resetToDefaultOptions()
+            .then((result) => {
+                this.setState({options: result});
+            })
     }
 }
 
