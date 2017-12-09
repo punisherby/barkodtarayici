@@ -94,7 +94,7 @@ class Settings extends AppBaseContainer {
                     <CheckBox
                         containerStyle={{width: null, borderRadius: 8}}
                         iconLeft
-                        title='El feneri hep açık kalsın'
+                        title='Link içeren QR kodlarını tarayıcıda otomatik aç'
                         iconType='material-community'
                         checkedIcon='checkbox-marked-circle'
                         uncheckedIcon='checkbox-blank-circle-outline'
@@ -106,7 +106,7 @@ class Settings extends AppBaseContainer {
                     <CheckBox
                         containerStyle={{width: null, borderRadius: 8}}
                         iconLeft
-                        title='Link içeren QR kodlarını tarayıcıda otomatik aç'
+                        title='Geçmiş listesi tut'
                         iconType='material-community'
                         checkedIcon='checkbox-marked-circle'
                         uncheckedIcon='checkbox-blank-circle-outline'
@@ -114,18 +114,6 @@ class Settings extends AppBaseContainer {
                         uncheckedColor='#41bfeb'
                         checked={this.state.options[2]}
                         onPress={() => this._setNewOptions(2)}
-                    />
-                    <CheckBox
-                        containerStyle={{width: null, borderRadius: 8}}
-                        iconLeft
-                        title='Geçmiş listesi tut'
-                        iconType='material-community'
-                        checkedIcon='checkbox-marked-circle'
-                        uncheckedIcon='checkbox-blank-circle-outline'
-                        checkedColor='#41bfeb'
-                        uncheckedColor='#41bfeb'
-                        checked={this.state.options[3]}
-                        onPress={() => this._setNewOptions(3)}
                     />
                 </View>
             </View>

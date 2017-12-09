@@ -3,8 +3,8 @@ import {Platform, AsyncStorage} from "react-native";
 class OptionsService {
 
     firstTimeProcess = true;
-    defaultOptions = [true, false, false, true];
-    options = [true, false, false, true];
+    defaultOptions = [true, false, true];
+    options = [true, false, true];
 
     getDefaultOptions() {
         return this.defaultOptions;
@@ -16,7 +16,6 @@ class OptionsService {
         try {
             await AsyncStorage.setItem('options' , JSON.stringify(this.options));
         } catch (error) {
-            console.log(error);
             return this.options;
         }
 
@@ -51,7 +50,6 @@ class OptionsService {
         try {
             await AsyncStorage.setItem('options' , JSON.stringify(tmpOptionArray));
         } catch (error) {
-            console.log(error);
             return this.options;
         }
         this.options = {...tmpOptionArray}

@@ -6,6 +6,7 @@ import AppBaseContainer from "./AppBaseContainer";
 import Torch from 'react-native-torch';
 import Permissions from 'react-native-permissions';
 import DateHelper from "../helper/DateHelper";
+import {optionsService} from "../services/OptionsService";
 
 export let rootNavigator = null;
 
@@ -216,17 +217,28 @@ class BarcodeScan extends AppBaseContainer {
         }
     }
 
+    checkTorchSettingsAndEnable(){
+        if(optionsService.getSingleOption(1)){
+            this.state.torchMode = "on";
+            Platform.OS == "ios" ? Torch.switchState(true) : NativeModules.CaptureModule.startFlash();
+        }
+    }
+
     _onBarCodeRead(e) {
         if (this.state.barcodeDetected === true) {
             return;
         }
         this.lastBarcodeData = e.nativeEvent;
-        this.setState({barcodeDetected: true, torchMode: "off"});
         this._barCode.stopScan();
+        this.setState({barcodeDetected: true, torchMode: "off"});
+
+        if(optionsService.getSingleOption(0)){
+            Clipboard.setString(e.nativeEvent.data.code);
+        }
 
         this._saveItemAsHistoryItem(e.nativeEvent);
 
-        Clipboard.setString(e.nativeEvent.data.code);
+        this._openURLIfQRCodeContainsValidURL(e.nativeEvent.data);
     }
 
     _resetBarcodeScan() {
@@ -278,7 +290,37 @@ class BarcodeScan extends AppBaseContainer {
         return true;
     }
 
+    _openURLIfQRCodeContainsValidURL(data) {
+        if (!optionsService.getSingleOption(1)) {
+            return;
+        }
+
+        if (data.type.toLowerCase().indexOf("qr") == -1) {
+            return;
+        }
+
+        let urlRegex = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
+        let potentialUrl = data.code.replace("\"", "");
+
+
+        if (urlRegex.test(potentialUrl)) {
+            Linking.canOpenURL(potentialUrl).then(supported => {
+                console.log(potentialUrl);
+                if (supported){
+                    return Linking.openURL(potentialUrl);
+                }
+            }).catch(err => {
+                console.log(potentialUrl);
+                console.log(err);
+            });
+        }
+    }
+
     async _saveItemAsHistoryItem(barcodeItem) {
+        if(!optionsService.getSingleOption(2)){
+            return;
+        }
+
         let barcodeScanArray = [];
         let barcodeObj = {...barcodeItem.data, date : DateHelper.getCurrentDate()}
 
