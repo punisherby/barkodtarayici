@@ -1,4 +1,7 @@
 import moment from "moment";
+import 'moment/locale/tr';
+
+moment.locale('tr');
 
 export default DateHelper = {
 
@@ -60,6 +63,10 @@ export default DateHelper = {
 
     dateToMMMMDDYYYY(date = moment()) {
         return moment(date).format("MMMM DD, YYYY");
+    },
+
+    dateToFullDateTimeString(date) {
+        return moment(date).locale("tr").format("LLL");
     },
 
     dateToYYYYMMDD(date = moment(), seperator = "-", isUtc = false) {
@@ -186,7 +193,7 @@ export default DateHelper = {
     },
 
     YYYYMMDD2ddddMMMMDo (date) {
-        return moment(date, "YYYY-MM-DD").format("dddd, MMMM Do");
+        return moment(date, "YYYY-MM-DD").locale("tr").format("dddd, MMMM Do");
     },
 
     isBelongingToCurrentWeek(selectedDay) {

@@ -277,9 +277,21 @@ class BarcodeScan extends AppBaseContainer {
     }
 
     async _saveItemAsHistoryItem(barcodeItem) {
+        let barcodeScanArray = [];
         let barcodeObj = {...barcodeItem.data, date : DateHelper.getCurrentDate()}
+
         try {
-            await AsyncStorage.setItem('barcodeScanHistory' , JSON.stringify(barcodeObj));
+            const value = await AsyncStorage.getItem('barcodeScanHistory');
+            if (value !== null){
+                barcodeScanArray = JSON.parse(value);
+            }
+            barcodeScanArray.push(barcodeObj);
+
+            try {
+                await AsyncStorage.setItem('barcodeScanHistory' , JSON.stringify(barcodeScanArray));
+            } catch (error) {
+                console.log(error);
+            }
         } catch (error) {
             console.log(error);
         }
