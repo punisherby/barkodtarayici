@@ -57,7 +57,7 @@ class About extends AppBaseContainer {
                 </View>
 
                 <View style={{flex: 0.7, padding: 10, flexDirection: "column", alignItems: "center", justifyContent: "flex-start"}}>
-                    <Animatable.Text style={{fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "#41bfeb"}} animation="flipInX" delay={300} duration={1000} iterationCount={1} direction="alternate">Barkod Tarayıcım</Animatable.Text>
+                    <Animatable.Text style={{fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "#41bfeb"}} animation="flipInX" delay={300} duration={1000} iterationCount={1} direction="alternate">Barkod Tarayıcı</Animatable.Text>
                     <Text style={{paddingTop: 20, textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>
                         Bu uygulama her türlü Barkod ve QR kod okuyabilmekte olan güçlü bir algoritmik görüntü işleme teknolojisine sahiptir.
                     </Text>
