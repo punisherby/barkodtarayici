@@ -36,7 +36,7 @@ class BarcodeScan extends AppBaseContainer {
     componentDidMount() {
         setTimeout(() => {
             this._checkPermission();
-        }, 100);
+        }, 200);
     }
 
     componentWillMount() {
@@ -177,14 +177,18 @@ class BarcodeScan extends AppBaseContainer {
         Permissions.request('camera')
             .then(response => {
                 if (response === "denied" || response === "restricted") {
-                    this.pushToActiveScreenStack(this.getScreenMap().PermissionError.name)
+                    setTimeout(() => {
+                        this.pushToActiveScreenStack(this.getScreenMap().PermissionError.name);
+                    }, 200);
                 } else {
                     Permissions.request('photo')
                         .then(response2 => {
                             if (response2 === "denied" || response2 === "restricted") {
-                                this.pushToActiveScreenStack(this.getScreenMap().PermissionError.name)
+                                setTimeout(() => {
+                                    this.pushToActiveScreenStack(this.getScreenMap().PermissionError.name);
+                                }, 200);
                             } else {
-                                    this.setState({cameraPhotoPermissionGranted: true});
+                                this.setState({cameraPhotoPermissionGranted: true});
                             }
                         });
                 }
