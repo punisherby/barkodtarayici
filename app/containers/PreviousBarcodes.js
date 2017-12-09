@@ -70,7 +70,7 @@ class PreviousBarcodes extends AppBaseContainer {
                             size={36}
                             color="#41bfeb"
                         />
-                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Barkod Tara</Text>
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Barkod Oku</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this._deletePreviousBarcodesConfirmation()} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
                         <Icon
@@ -121,8 +121,8 @@ class PreviousBarcodes extends AppBaseContainer {
 
     _renderNoBarcodeFound() {
         return (
-            <View style={{flex: 0.75, justifyContent: "center"}}>
-                <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 16, color: "black"}}>
+            <View style={{flex: 0.75, justifyContent: "center", padding: 6}}>
+                <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 15, color: "black"}}>
                     Barkod tarayıcıda geçmişe ait kaydınız yoktur.
                 </Text>
             </View>
