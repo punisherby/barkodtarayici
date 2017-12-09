@@ -36,7 +36,7 @@ class BarcodeScan extends AppBaseContainer {
     componentDidMount() {
         setTimeout(() => {
             this._checkPermission();
-        }, 300);
+        }, 100);
     }
 
     componentWillMount() {
@@ -299,11 +299,16 @@ class BarcodeScan extends AppBaseContainer {
             return;
         }
 
-        let urlRegex = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
-        let potentialUrl = data.code.replace("\"", "");
+        let urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})/g;
 
+
+        let potentialUrl = data.code.toLowerCase();
 
         if (urlRegex.test(potentialUrl)) {
+            if (!(potentialUrl.indexOf("http") == 0 || potentialUrl.indexOf("https") == 0 || potentialUrl.indexOf("ftp") == 0)){
+                potentialUrl = "http://" + potentialUrl;
+            }
+
             Linking.canOpenURL(potentialUrl).then(supported => {
                 console.log(potentialUrl);
                 if (supported){
