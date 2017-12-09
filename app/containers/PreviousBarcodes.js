@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, AsyncStorage, FlatList} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, AsyncStorage, FlatList, ActivityIndicator} from "react-native";
 import {Icon, Button, List, ListItem} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 import DateHelper from "../helper/DateHelper";
@@ -14,8 +14,9 @@ class PreviousBarcodes extends AppBaseContainer {
 
     state = {
         barcodeScanHistory: [],
+        isBarcodeScanHistoryRecieved: false,
         isBarcodeClicked: false,
-        lastBarcodeData: null
+        lastBarcodeData: null,
     }
 
     constructor(props){
@@ -27,10 +28,13 @@ class PreviousBarcodes extends AppBaseContainer {
         try {
             const value = await AsyncStorage.getItem('barcodeScanHistory');
             if (value !== null){
-                this.setState({barcodeScanHistory: JSON.parse(value).reverse()});
+                this.setState({barcodeScanHistory: JSON.parse(value).reverse(), isBarcodeScanHistoryRecieved: true});
+            } else {
+                this.setState({isBarcodeScanHistoryRecieved: true});
             }
         } catch (error) {
             console.log(error);
+            this.setState({isBarcodeScanHistoryRecieved: true});
         }
     }
 
@@ -58,25 +62,71 @@ class PreviousBarcodes extends AppBaseContainer {
                     </View>
                 </View>
 
-                <View style={{flex: 0.9}}>
-                    <List>
-                        <FlatList
-                            data={this.state.barcodeScanHistory}
-                            renderItem={({ item, i }) => (
-                                <ListItem
-                                    key={item.date}
-                                    title={DateHelper.dateToFullDateTimeString(item.date)}
-                                    subtitle={item.code}
-                                    leftIcon={{name: this.isQRCode(item.type) ? "qrcode" : "barcode-scan", type: "material-community", color: "#41bfeb", style: {fontSize: 30}}}
-                                    onPress={() => this.setState({isBarcodeClicked: true, lastBarcodeData: item})}
-                                />
-                            )}
+                <View style={{flex: 0.15, padding: 4, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                    <TouchableOpacity onPress={() => this.pushToActiveScreenStack(this.getScreenMap().BarcodeScan.name)} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
+                        <Icon
+                            name="barcode-scan"
+                            type='material-community'
+                            size={36}
+                            color="#41bfeb"
                         />
-                    </List>
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Barkod Tara</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this._deletePreviousBarcodesConfirmation()} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
+                        <Icon
+                            name="delete-forever"
+                            type='material-community'
+                            size={36}
+                            color="#41bfeb"
+                        />
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Geçmişi Sil</Text>
+                    </TouchableOpacity>
                 </View>
+                {!this.state.isBarcodeScanHistoryRecieved ? this._renderSpinner() : (this.state.barcodeScanHistory.length > 0 ? this._renderPreviousBarcodeList() : this._renderNoBarcodeFound())}
                 {this._renderBarcodeFoundModal()}
             </View>
         );
+    }
+
+    _renderPreviousBarcodeList() {
+        return (
+            <View style={{flex: 0.75}}>
+                <List>
+                    <FlatList
+                        data={this.state.barcodeScanHistory}
+                        renderItem={({ item, i }) => (
+                            <ListItem
+                                key={item.date}
+                                title={DateHelper.dateToFullDateTimeString(item.date)}
+                                titleStyle={{fontFamily: "Verdana", fontSize: 14, fontWeight: "400", color: "black"}}
+                                subtitle={item.code}
+                                leftIcon={{name: this.isQRCode(item.type) ? "qrcode" : "barcode-scan", type: "material-community", color: "#41bfeb", style: {fontSize: 30}}}
+                                onPress={() => this.setState({isBarcodeClicked: true, lastBarcodeData: item})}
+                                rightIcon={{name: "search", type: "font-awesome", style: {fontSize: 20}}}
+                            />
+                        )}
+                    />
+                </List>
+            </View>
+        )
+    }
+
+    _renderSpinner() {
+        return (
+            <View style={{flex: 0.75, justifyContent: "center"}}>
+                <ActivityIndicator color="#41bfeb" size="large"/>
+            </View>
+        )
+    }
+
+    _renderNoBarcodeFound() {
+        return (
+            <View style={{flex: 0.75, justifyContent: "center"}}>
+                <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 16, color: "black"}}>
+                    Barkod tarayıcıda geçmişe ait kaydınız yoktur.
+                </Text>
+            </View>
+        )
     }
 
     _renderBarcodeFoundModal() {
@@ -140,6 +190,27 @@ class PreviousBarcodes extends AppBaseContainer {
             return true;
         }
         return false;
+    }
+
+    _deletePreviousBarcodesConfirmation() {
+        Alert.alert(
+            'Uyarı',
+            'Geçmişe ait arama verileriniz silinecektir. Kabul ediyor musunuz?',
+            [
+                {text: 'İptal', onPress: () => this, style: 'cancel'},
+                {text: 'OK', onPress: () => this._deletePreviousBarcodes()},
+            ],
+            { cancelable: false }
+        )
+    }
+
+    async _deletePreviousBarcodes() {
+        try {
+            await AsyncStorage.removeItem('barcodeScanHistory')
+            this.setState({barcodeScanHistory: [], lastBarcodeData: null });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     _onGoogleSearchPressed(searchString) {
