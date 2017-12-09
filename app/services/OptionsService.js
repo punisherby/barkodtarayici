@@ -3,8 +3,8 @@ import {Platform, AsyncStorage} from "react-native";
 class OptionsService {
 
     firstTimeProcess = true;
-    defaultOptions = [true, false, true];
-    options = [true, false, true];
+    defaultOptions = [true, true, true];
+    options = [true, true, true];
 
     initialize() {
         this.getOptions();
