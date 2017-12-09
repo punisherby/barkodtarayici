@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking} from "react-native";
-import {Icon, Button} from "react-native-elements";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, AsyncStorage} from "react-native";
+import {Icon, Button, CheckBox, Divider} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 
 class Settings extends AppBaseContainer {
@@ -11,12 +11,28 @@ class Settings extends AppBaseContainer {
         screenBackgroundImageName: "background-photo"
     };
 
+    state = {
+        defaultOptions: [true, false, false, true],
+        options: [true, false, false, true]
+    }
+
     constructor(props){
         super(props);
         this.setStyle(this.navigatorStyle);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        try {
+            const value = await AsyncStorage.getItem('options');
+            if (value !== null){
+                this.setState({options: JSON.parse(value)});
+            } else {
+                this.setState({options: this.state.defaultOptions});
+            }
+        } catch (error) {
+            console.log(error);
+            this.setState({options: this.state.defaultOptions});
+        }
     }
 
     componentWillUnmount() {
@@ -43,11 +59,112 @@ class Settings extends AppBaseContainer {
                     </View>
                 </View>
 
-                <View style={{flex: 0.9, padding: 4, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                <View style={{flex: 0.15, padding: 4, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
+                    <TouchableOpacity onPress={() => this.pushToActiveScreenStack(this.getScreenMap().BarcodeScan.name)} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
+                        <Icon
+                            name="barcode-scan"
+                            type='material-community'
+                            size={36}
+                            color="#41bfeb"
+                        />
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Barkod Oku</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this._defaultSettingsConfirmation()} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
+                        <Icon
+                            name="power-settings"
+                            type='material-community'
+                            size={36}
+                            color="#41bfeb"
+                        />
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Varsayılan</Text>
+                    </TouchableOpacity>
+                </View>
 
+                <View>
+                    <Divider style={{ backgroundColor: '#41bfeb', height: 5, opacity: 0.2}} />
+                </View>
+
+                <View style={{flex: 0.75, padding: 4, flexDirection: "column"}}>
+                    <CheckBox
+                        containerStyle={{width: null, borderRadius: 8}}
+                        iconLeft
+                        title='Panoya otomatik kopyala'
+                        iconType='material-community'
+                        checkedIcon='checkbox-marked-circle'
+                        uncheckedIcon='checkbox-blank-circle-outline'
+                        checkedColor='#41bfeb'
+                        uncheckedColor='#41bfeb'
+                        checked={this.state.options[0]}
+                        onPress={() => this._setNewOptions(0)}
+                    />
+                    <CheckBox
+                        containerStyle={{width: null, borderRadius: 8}}
+                        iconLeft
+                        title='El feneri hep açık kalsın'
+                        iconType='material-community'
+                        checkedIcon='checkbox-marked-circle'
+                        uncheckedIcon='checkbox-blank-circle-outline'
+                        checkedColor='#41bfeb'
+                        uncheckedColor='#41bfeb'
+                        checked={this.state.options[1]}
+                        onPress={() => this._setNewOptions(1)}
+                    />
+                    <CheckBox
+                        containerStyle={{width: null, borderRadius: 8}}
+                        iconLeft
+                        title='Link içeren QR kodlarını tarayıcıda otomatik aç'
+                        iconType='material-community'
+                        checkedIcon='checkbox-marked-circle'
+                        uncheckedIcon='checkbox-blank-circle-outline'
+                        checkedColor='#41bfeb'
+                        uncheckedColor='#41bfeb'
+                        checked={this.state.options[2]}
+                        onPress={() => this._setNewOptions(2)}
+                    />
+                    <CheckBox
+                        containerStyle={{width: null, borderRadius: 8}}
+                        iconLeft
+                        title='Geçmiş listesi tut'
+                        iconType='material-community'
+                        checkedIcon='checkbox-marked-circle'
+                        uncheckedIcon='checkbox-blank-circle-outline'
+                        checkedColor='#41bfeb'
+                        uncheckedColor='#41bfeb'
+                        checked={this.state.options[3]}
+                        onPress={() => this._setNewOptions(3)}
+                    />
                 </View>
             </View>
         );
+    }
+
+    async _setNewOptions(optionNumber){
+        let tmpOptionArray = {...this.state.options};
+        tmpOptionArray[optionNumber] = !tmpOptionArray[optionNumber];
+
+        this.setState({options: tmpOptionArray})
+
+        try {
+            await AsyncStorage.setItem('options' , JSON.stringify(tmpOptionArray));
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    _defaultSettingsConfirmation() {
+        Alert.alert(
+            'Uyarı',
+            'Varsayılan uygulama ayarlarına dönülecektir. Kabul ediyor musunuz?',
+            [
+                {text: 'İptal', onPress: () => this, style: 'cancel'},
+                {text: 'OK', onPress: () => this._defaultSettings()},
+            ],
+            { cancelable: false }
+        )
+    }
+
+    _defaultSettings() {
+        this.setState({options: this.state.defaultOptions});
     }
 }
 
