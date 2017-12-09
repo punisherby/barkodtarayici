@@ -6,6 +6,10 @@ class OptionsService {
     defaultOptions = [true, false, true];
     options = [true, false, true];
 
+    initialize() {
+        this.getOptions();
+    }
+
     getDefaultOptions() {
         return this.defaultOptions;
     }
