@@ -16,6 +16,11 @@ const list = [
         iconType: 'material-community',
     },
     {
+        title: 'Barkod Oluştur',
+        icon: 'barcode',
+        iconType: 'material-community',
+    },
+    {
         title: 'Geçmiş Barkodlarım',
         icon: 'history',
         iconType: 'material-community',
@@ -74,15 +79,18 @@ class Drawer extends AppBaseContainer {
                 return this.getScreenMap().QRCodeGenerator.name;
                 break;
             case 3:
-                return this.getScreenMap().PreviousBarcodes.name;
+                return this.getScreenMap().BarcodeGenerator.name;
                 break;
             case 4:
-                return this.getScreenMap().Settings.name;
+                return this.getScreenMap().PreviousBarcodes.name;
                 break;
             case 5:
-                return this.getScreenMap().About.name;
+                return this.getScreenMap().Settings.name;
                 break;
             case 6:
+                return this.getScreenMap().About.name;
+                break;
+            case 7:
                 return this.getScreenMap().Contact.name;
                 break;
             default:

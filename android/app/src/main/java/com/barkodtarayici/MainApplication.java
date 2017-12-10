@@ -16,6 +16,7 @@ import com.facebook.soloader.SoLoader;
 import com.reactnativenavigation.NavigationApplication;
 import com.rnfs.RNFSPackage;
 import cl.json.RNSharePackage;
+import fr.greweb.reactnativeviewshot.RNViewShotPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -59,7 +60,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new VectorIconsPackage(),
             new SvgPackage(),
             new RNFSPackage(),
-            new RNSharePackage()
+            new RNSharePackage(),
+            new RNViewShotPackage()
     );
   }
 

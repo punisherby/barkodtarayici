@@ -6,6 +6,7 @@ import PreviousBarcodes from "./PreviousBarcodes";
 import Settings from "./Settings";
 import About from "./About";
 import Contact from "./Contact";
+import BarcodeGenerator from "./BarcodeGenerator";
 
 export const SCREENS_MAP = {
     Drawer: {
@@ -19,6 +20,10 @@ export const SCREENS_MAP = {
     QRCodeGenerator: {
         name: 'barkod.QRCodeGenerator',
         screen: QRCodeGenerator
+    },
+    BarcodeGenerator: {
+        name: 'barkod.BarcodeGenerator',
+        screen: BarcodeGenerator
     },
     PreviousBarcodes: {
         name: 'barkod.PreviousBarcodes',
