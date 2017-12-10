@@ -65,7 +65,7 @@ class BarcodeGenerator extends AppBaseContainer {
                         />
                         <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Paylaş</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => this.saveQrToDisk()} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
+                    <TouchableOpacity onPress={() => this.saveBarcodeToDisk()} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
                         <Icon
                             name="download"
                             type='font-awesome'
@@ -98,22 +98,23 @@ class BarcodeGenerator extends AppBaseContainer {
         );
     }
 
-    saveQrToDisk() {
-        this.svg.toDataURL((data) => {
-            RNFS.writeFile(RNFS.CachesDirectoryPath+"/qrcode_321312.png", data, 'base64')
-                .then((success) => {
-                    return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+"/qrcode_321312.png", 'photo')
-                })
-                .then(() => {
-                    if (Platform.OS == "ios") {
+    saveBarcodeToDisk() {
+        socialShareService.takeScreenCaptureInBase64(this.screenViewRef)
+            .then((data) => {
+                RNFS.writeFile(RNFS.CachesDirectoryPath+"/qrcode_321312.png", data, 'base64')
+                    .then((success) => {
+                        return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+"/qrcode_321312.png", 'photo')
+                    })
+                    .then(() => {
+                        if (Platform.OS == "ios") {
 
-                    }else {
-                        ToastAndroid.show('QR Kod fotoğraf kütüphanenize kayıt edildi!', ToastAndroid.SHORT)
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
+                        }else {
+                            ToastAndroid.show('QR Kod fotoğraf kütüphanenize kayıt edildi!', ToastAndroid.SHORT)
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
         })
     }
 

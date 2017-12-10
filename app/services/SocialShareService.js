@@ -20,6 +20,12 @@ class SocialShareService {
         snapshotContentContainer: false
     };
 
+    ssWithRefDefaultOptions = {
+        format: "png",
+        result: "base64",
+        snapshotContentContainer: false
+    };
+
     startNativeSharing(data) {
         if (this.isActiveProcessExists) {
             return;
@@ -80,6 +86,11 @@ class SocialShareService {
 
     takeScreenCapture(viewRef) {
         let shareOptions = Platform.OS === "ios" ? this.ssIOSDefaultOptions : this.ssAndroidDefaultOptions;
+        return captureRef(viewRef, shareOptions);
+    }
+
+    takeScreenCaptureInBase64(viewRef) {
+        let shareOptions = this.ssWithRefDefaultOptions;
         return captureRef(viewRef, shareOptions);
     }
 }
