@@ -30,8 +30,6 @@ class QRCodeGenerator extends AppBaseContainer {
     }
 
     render() {
-        let base64Logo = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAA..';
-
         return (
             <View style={{flex: 1, backgroundColor: "white", paddingTop: Platform.OS == "ios" ? 20 : 0}}>
                 <View style={{flex: 0.1, backgroundColor: "#41bfeb", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
@@ -83,7 +81,8 @@ class QRCodeGenerator extends AppBaseContainer {
                             onChangeText={(text) => this.setState({text: text})}
                             value={this.state.text}
                             autoCapitalize="none"
-                            placeholder="Örn : http://www.facebook.com"
+                            placeholder=" Örn: http://www.facebook.com"
+                            underlineColorAndroid="white"
                         />
                         <QRCode
                             getRef={(c) => (this.svg = c)}
@@ -98,9 +97,9 @@ class QRCodeGenerator extends AppBaseContainer {
 
     saveQrToDisk() {
         this.svg.toDataURL((data) => {
-            RNFS.writeFile(RNFS.CachesDirectoryPath+"/qrcode_321312.png", data, 'base64')
+            RNFS.writeFile(RNFS.CachesDirectoryPath+"/qrcode_.png", data, 'base64')
                 .then((success) => {
-                    return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+"/qrcode_321312.png", 'photo')
+                    return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+"/qrcode_.png", 'photo')
                 })
                 .then(() => {
                     if (Platform.OS == "ios") {

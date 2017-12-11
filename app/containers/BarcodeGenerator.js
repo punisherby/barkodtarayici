@@ -1,11 +1,12 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, StyleSheet, TextInput, Dimensions, CameraRoll , ToastAndroid} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, StyleSheet, TextInput, Dimensions, CameraRoll , ToastAndroid, Picker} from "react-native";
 import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from "react-native-fs"
 import {socialShareService} from "../services/SocialShareService";
 import Barcode from 'react-native-barcode-builder';
+import { Dropdown } from 'react-native-material-dropdown';
 
 class BarcodeGenerator extends AppBaseContainer {
 
@@ -19,6 +20,8 @@ class BarcodeGenerator extends AppBaseContainer {
 
     state = {
         text: '',
+        type: 'CODE128',
+        error: false
     };
 
     constructor(props){
@@ -33,7 +36,30 @@ class BarcodeGenerator extends AppBaseContainer {
     }
 
     render() {
-        let base64Logo = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAA..';
+
+        let data = [
+            {
+                value: 'CODE128',
+            },
+            {
+                value: 'EAN8',
+            },
+            {
+                value: 'CODE39',
+            },
+            {
+                value: 'ITF',
+            },
+            {
+                value: 'MSI10',
+            },
+            {
+                value: 'pharmacode',
+            },
+            {
+                value: 'codabar',
+            }
+        ];
 
         return (
             <View style={{flex: 1, backgroundColor: "white", paddingTop: Platform.OS == "ios" ? 20 : 0}}>
@@ -49,7 +75,7 @@ class BarcodeGenerator extends AppBaseContainer {
                         </TouchableOpacity>
                     </View>
                     <View style={{flex: 0.8}}>
-                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>QR Kod Oluştur</Text>
+                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>Barkod Oluştur</Text>
                     </View>
                     <View style={{flex: 0.1}}>
                     </View>
@@ -76,34 +102,72 @@ class BarcodeGenerator extends AppBaseContainer {
                     </TouchableOpacity>
                 </View>
 
-                <View style={{flex: 0.70, padding: 4, flexDirection: "column", alignItems: "center"}}>
-                    <View style={styles.container}>
-                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black", paddingBottom: 15}}>
-                            Aşağıdaki alana bir yazı, websitesi adresi, gizli mesaj vb. girip kendi QR kodunuzu oluşturabilirsiniz.
+                <View style={{flex: 0.7, padding: 4, flexDirection: "column", alignItems: "center"}}>
+                    <View style={{flex: 0.6, flexDirection: "column", alignItems: "flex-start", justifyContent: "center", paddingLeft: 10}}>
+                        <Text style={{fontFamily: "Verdana", fontSize: 12, color: "grey", paddingBottom: 4}}>
+                            Barkod
                         </Text>
                         <TextInput
                             style={styles.input}
-                            onChangeText={(text) => this.setState({text: text})}
+                            onChangeText={(text) => { this.state.error= false; this.setState({text: text})}}
                             value={this.state.text}
                             autoCapitalize="none"
-                            placeholder="Örn : http://www.facebook.com"
+                            placeholder=" Örn: 123456"
+                            underlineColorAndroid="white"
                         />
-                        <View collapsable={false} ref={(ref) => this.screenViewRef = ref} style={{backgroundColor: "white"}}>
-                            <Barcode value={this.state.text ? this.state.text : " "} format="CODE128" width={1.2}/>
-                            <Text style={{textAlign: "center", color: "black", fontSize: 11, marginTop: -10}}>{this.state.text ? this.state.text : " "}</Text>
-                        </View>
+                        <Dropdown
+                            label='Barkod tipi seçin'
+                            labelFontSize={13}
+                            data={data}
+                            containerStyle={styles.pickerInput}
+                            value={this.state.type}
+                            onChangeText={(value) => this._onTypeSelected(value)}
+                        />
+                    </View>
+                    <View style={{flex: 0.4, width: Dimensions.get('window').width < 400 ? 280 : 380, alignItems: "center", paddingLeft: 10}}>
+                        {!this.state.error ?
+                            <View style={{flexDirection:'column'}}>
+                                <View style={{alignItems: "flex-start"}}>
+                                    <Text style={{fontFamily: "Verdana", fontSize: 12, color: "grey"}}>
+                                        Barkodunuz
+                                    </Text>
+                                </View>
+                                <View style={{width: Dimensions.get('window').width < 400 ? 280 : 380, paddingTop: 10}}>
+                                    <View collapsable={false} ref={(ref) => this.screenViewRef = ref} style={{backgroundColor: "white"}}>
+                                        <Barcode value={this.state.text ? this.state.text : " "} format={this.state.type} width={1.2} onError={() => this.setState({error: true})}/>
+                                        <Text style={{textAlign: "center", color: "black", fontSize: 11, marginTop: -10, paddingBottom: 10}}>{this.state.text ? this.state.text : " "}</Text>
+                                    </View>
+                                </View>
+                            </View>
+                                :
+                            <View style={{flex: 1}}>
+                                <Icon
+                                    name="warning"
+                                    type='font-awesome'
+                                    size={36}
+                                    color="red"
+                                />
+                                <Text style={{textAlign: "center", color: "black", fontSize: 11}}>Barkod Tipi ve Barkod uyumlu değil.</Text>
+                                <Text style={{textAlign: "center", color: "black", fontSize: 11}}>Barkod tipi ya da Barkod'u değiştirip tekrar deneyin.</Text>
+                            </View>
+                        }
                     </View>
                 </View>
             </View>
         );
     }
 
+    _onTypeSelected(value) {
+        this.state.error= false;
+        this.setState({type: value});
+    }
+
     saveBarcodeToDisk() {
         socialShareService.takeScreenCaptureInBase64(this.screenViewRef)
             .then((data) => {
-                RNFS.writeFile(RNFS.CachesDirectoryPath+"/qrcode_321312.png", data, 'base64')
+                RNFS.writeFile(RNFS.CachesDirectoryPath+"/barcode_.png", data, 'base64')
                     .then((success) => {
-                        return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+"/qrcode_321312.png", 'photo')
+                        return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+"/barcode_.png", 'photo')
                     })
                     .then(() => {
                         if (Platform.OS == "ios") {
@@ -130,15 +194,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-
     input: {
-        width: Dimensions.get('window').width < 400 ? 300 : 400,
+        width: Dimensions.get('window').width < 400 ? 280 : 380,
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
-        margin: 10,
         borderRadius: 5,
-        padding: 5,
+    },
+    pickerInput: {
+        width: Dimensions.get('window').width < 400 ? 280 : 380,
+        borderColor: 'gray',
+        paddingTop: 20
     }
 });
 

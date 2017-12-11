@@ -16,6 +16,7 @@
 		"react-native-elements": "^0.18.4",
 		"react-native-fetch-polyfill": "^1.1.2",
 		"react-native-fs": "^2.8.5",
+		"react-native-material-dropdown": "^0.6.1",
 		"react-native-navigation": "^1.1.300",
 		"react-native-open-settings": "^1.0.1",
 		"react-native-permissions": "^1.0.4",
