@@ -126,6 +126,7 @@ class BarcodeScan extends AppBaseContainer {
                      ref={ component => this._barCode = component }
                      scannerRectWidth={300}
                      barCodeTypes={[]}
+                     scannerRectCornerColor="#42f4c5"
                      onBarCodeRead={(data) => this._onBarCodeRead(data)}/>
         )
     }
