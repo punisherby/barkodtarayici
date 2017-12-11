@@ -42,7 +42,13 @@ class BarcodeGenerator extends AppBaseContainer {
                 value: 'CODE128',
             },
             {
+                value: 'EAN13',
+            },
+            {
                 value: 'EAN8',
+            },
+            {
+                value: 'UPC',
             },
             {
                 value: 'CODE39',
@@ -51,7 +57,10 @@ class BarcodeGenerator extends AppBaseContainer {
                 value: 'ITF',
             },
             {
-                value: 'MSI10',
+                value: 'ITF14',
+            },
+            {
+                value: 'MSI',
             },
             {
                 value: 'pharmacode',
@@ -134,7 +143,7 @@ class BarcodeGenerator extends AppBaseContainer {
                                 </View>
                                 <View style={{width: Dimensions.get('window').width < 400 ? 280 : 380, paddingTop: 10}}>
                                     <View collapsable={false} ref={(ref) => this.screenViewRef = ref} style={{backgroundColor: "white"}}>
-                                        <Barcode value={this.state.text ? this.state.text : " "} format={this.state.type} width={1.2} onError={() => this.setState({error: true})}/>
+                                        <Barcode value={this.state.text ? this.state.text : " "} format={this.state.type} width={1.2} onError={() => this.setState({error: true})} flat/>
                                         <Text style={{textAlign: "center", color: "black", fontSize: 11, marginTop: -10, paddingBottom: 10}}>{this.state.text ? this.state.text : " "}</Text>
                                     </View>
                                 </View>
