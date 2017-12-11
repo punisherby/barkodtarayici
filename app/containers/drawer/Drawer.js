@@ -61,7 +61,7 @@ class Drawer extends AppBaseContainer {
                                     title={item.title}
                                     titleStyle={{fontWeight: "bold", fontSize: 16}}
                                     leftIcon={{name: item.icon, type: item.iconType, style: {fontSize: 30}}}
-                                    onPress={() => this._routeScreenByRootNavigator(this._pageRedirectionResolver(i+1))}
+                                    onPress={() => this._pageRedirectionResolver(i+1)}
                                 />
                             ))
                         }
@@ -73,25 +73,26 @@ class Drawer extends AppBaseContainer {
     _pageRedirectionResolver(num) {
         switch (num) {
             case 1:
-                return this.getScreenMap().BarcodeScan.name;
+                this.closeDrawer();
+                this.startNewScreenStack(this.getScreenMap().BarcodeScan.name);
                 break;
             case 2:
-                return this.getScreenMap().QRCodeGenerator.name;
+                this._routeScreenByRootNavigator(this.getScreenMap().QRCodeGenerator.name);
                 break;
             case 3:
-                return this.getScreenMap().BarcodeGenerator.name;
+                this._routeScreenByRootNavigator(this.getScreenMap().BarcodeGenerator.name);
                 break;
             case 4:
-                return this.getScreenMap().PreviousBarcodes.name;
+                this._routeScreenByRootNavigator(this.getScreenMap().PreviousBarcodes.name)
                 break;
             case 5:
-                return this.getScreenMap().Settings.name;
+                this._routeScreenByRootNavigator(this.getScreenMap().Settings.name)
                 break;
             case 6:
-                return this.getScreenMap().About.name;
+                this._routeScreenByRootNavigator(this.getScreenMap().About.name)
                 break;
             case 7:
-                return this.getScreenMap().Contact.name;
+                this._routeScreenByRootNavigator(this.getScreenMap().Contact.name)
                 break;
             default:
                 break;

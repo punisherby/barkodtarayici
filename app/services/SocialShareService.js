@@ -67,7 +67,7 @@ class SocialShareService {
     }
 
     createSharingOptions(imageData) {
-        const shareMessage = "Barkod Tarayıcı ile oluşturulmuştur.";
+        const shareMessage = "Barkod Tarayıcı ile oluşturulmuştur. Android uygulaması için: https://play.google.com/store/apps/details?id=com.barkodtarayici";
         return {
             title: "Barkod Tarayıcı",
             message: shareMessage,
@@ -76,7 +76,7 @@ class SocialShareService {
     }
 
     createSharingOptionsWithRef(uri) {
-        const shareMessage = "Barkod Tarayıcı ile oluşturulmuştur.";
+        const shareMessage = "Barkod Tarayıcı ile oluşturulmuştur. Android uygulaması için: https://play.google.com/store/apps/details?id=com.barkodtarayici";
         return {
             title: "Barkod Tarayıcı",
             message: shareMessage,

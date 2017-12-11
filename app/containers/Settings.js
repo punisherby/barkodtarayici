@@ -54,7 +54,7 @@ class Settings extends AppBaseContainer {
                 </View>
 
                 <View style={{flex: 0.15, padding: 4, flexDirection: "row", alignItems: "center", justifyContent: "center"}}>
-                    <TouchableOpacity onPress={() => this.pushToActiveScreenStack(this.getScreenMap().BarcodeScan.name)} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
+                    <TouchableOpacity onPress={() => this.startNewScreenStack(this.getScreenMap().BarcodeScan.name)} style={{height: 60, width: 80, borderColor: "black", borderWidth: 0.4, borderRadius: 8, marginRight: 10, padding: 2}}>
                         <Icon
                             name="barcode-scan"
                             type='material-community'
