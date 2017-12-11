@@ -112,12 +112,12 @@ class BarcodeGenerator extends AppBaseContainer {
                 </View>
 
                 <View style={{flex: 0.7, padding: 4, flexDirection: "column", alignItems: "center"}}>
-                    <View style={{flex: 0.3, width: Dimensions.get('window').width < 400 ? 280 : 380, alignItems: "center", paddingLeft: 10}}>
+                    <View style={{flex: 0.25, width: Dimensions.get('window').width < 400 ? 280 : 380, alignItems: "center", paddingLeft: 10}}>
                         {!this.state.error ?
                             <View style={{flexDirection:'column'}}>
                                 <View style={{alignItems: "flex-start"}}>
                                     <Text style={{fontFamily: "Verdana", fontSize: 12, color: "grey"}}>
-                                        Barkodunuz
+                                        Barkodunuz :
                                     </Text>
                                 </View>
                                 <View style={{width: Dimensions.get('window').width < 400 ? 280 : 380, paddingTop: 10}}>
@@ -140,9 +140,9 @@ class BarcodeGenerator extends AppBaseContainer {
                             </View>
                         }
                     </View>
-                    <View style={{flex: 0.7, flexDirection: "column", alignItems: "flex-start", justifyContent: "center", paddingLeft: 10}}>
+                    <View style={{flex: 0.75, flexDirection: "column", alignItems: "flex-start", justifyContent: "center", paddingLeft: 10}}>
                         <Text style={{fontFamily: "Verdana", fontSize: 12, color: "grey", paddingBottom: 4}}>
-                            Barkod
+                            Barkod :
                         </Text>
                         <TextInput
                             style={styles.input}
@@ -153,7 +153,7 @@ class BarcodeGenerator extends AppBaseContainer {
                             underlineColorAndroid="white"
                         />
                         <Dropdown
-                            label='Barkod tipi seçin'
+                            label='Barkod tipi seçin :'
                             labelFontSize={13}
                             data={data}
                             containerStyle={styles.pickerInput}
