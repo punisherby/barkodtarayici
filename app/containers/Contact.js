@@ -56,7 +56,7 @@ class Contact extends AppBaseContainer {
                 <View style={{flex: 0.7, padding: 10, flexDirection: "column", alignItems: "center", justifyContent: "flex-start"}}>
                     <Animatable.Text style={{fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "#41bfeb"}} animation="flipInX" delay={300} duration={1000} iterationCount={1} direction="alternate">İletişim Bilgileri</Animatable.Text>
                     <Text style={{paddingTop: 20, textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>
-                        barkodtarayicimdestek@gmail.com
+                        burakyilmaza@gmail.com
                     </Text>
                     <Text style={{paddingTop: 30, textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>
                         Burak YILMAZ {"\n"}{"\n"}
