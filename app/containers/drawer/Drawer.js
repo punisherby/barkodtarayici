@@ -49,8 +49,13 @@ class Drawer extends AppBaseContainer {
 
         return (
             <View style={{flex: 1, opacity:0.95, width:null, height:null, backgroundColor: "white", marginTop: Platform.OS == "ios" ? 20 : 0}}>
-                <View style={{flex: 0.1, backgroundColor: "#41bfeb", justifyContent: "center"}}>
-                    <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 20, fontWeight: "bold", color: "white"}}>Hızlı Menü</Text>
+                <View style={{flex: 0.1, backgroundColor: "#41bfeb", alignItems: "center", justifyContent: "center", flexDirection:"row"}}>
+                    <Image
+                        style={{flex:0.2, width: 50, height: 50, resizeMode: 'contain'}}
+                        source={require('../../images/app_logo.png')}
+                    />
+                    <Text style={{flex:0.6, textAlign: "center", fontFamily: "Verdana", fontSize: 20, fontWeight: "bold", color: "white"}}>Hızlı Menü</Text>
+                    <View style={{flex: 0.2}}></View>
                 </View>
                 <View style={{flex: 0.9}}>
                     <List containerStyle={{marginBottom: 0}}>
