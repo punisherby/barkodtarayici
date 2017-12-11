@@ -78,8 +78,12 @@ class Drawer extends AppBaseContainer {
     _pageRedirectionResolver(num) {
         switch (num) {
             case 1:
-                this.closeDrawer();
-                this.startNewScreenStack(this.getScreenMap().BarcodeScan.name);
+                if (Platform.OS == "android") {
+                    this.closeDrawer();
+                    this.startNewScreenStack(this.getScreenMap().BarcodeScan.name);
+                } else {
+                    this._routeScreenByRootNavigator(this.getScreenMap().BarcodeScan.name);
+                }
                 break;
             case 2:
                 this._routeScreenByRootNavigator(this.getScreenMap().QRCodeGenerator.name);
