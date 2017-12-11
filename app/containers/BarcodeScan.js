@@ -21,7 +21,8 @@ class BarcodeScan extends AppBaseContainer {
     state = {
         cameraPhotoPermissionGranted : false,
         torchMode: "off",
-        barcodeDetected : false
+        barcodeDetected : false,
+        cameraKeepOfflineInterval: null
     };
 
     lastBarcodeData;
@@ -37,6 +38,12 @@ class BarcodeScan extends AppBaseContainer {
         setTimeout(() => {
             this._checkPermission();
         }, 200);
+
+        this.cameraKeepOfflineInterval = setInterval(() => {
+            if (this.state.barcodeDetected) {
+                this._barCode.stopScan();
+            }
+        }, 1 * 1000);
     }
 
     componentWillMount() {
@@ -49,6 +56,12 @@ class BarcodeScan extends AppBaseContainer {
         if (Platform.OS == "android") {
             this.hardwareBackPressListener.remove();
         }
+
+        clearInterval(this.cameraKeepOfflineInterval);
+    }
+
+    componentWillReceiveProps(props) {
+        console.log("hey heyhey", props);
     }
 
     render() {
