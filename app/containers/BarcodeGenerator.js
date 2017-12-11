@@ -112,7 +112,35 @@ class BarcodeGenerator extends AppBaseContainer {
                 </View>
 
                 <View style={{flex: 0.7, padding: 4, flexDirection: "column", alignItems: "center"}}>
-                    <View style={{flex: 0.6, flexDirection: "column", alignItems: "flex-start", justifyContent: "center", paddingLeft: 10}}>
+                    <View style={{flex: 0.3, width: Dimensions.get('window').width < 400 ? 280 : 380, alignItems: "center", paddingLeft: 10}}>
+                        {!this.state.error ?
+                            <View style={{flexDirection:'column'}}>
+                                <View style={{alignItems: "flex-start"}}>
+                                    <Text style={{fontFamily: "Verdana", fontSize: 12, color: "grey"}}>
+                                        Barkodunuz
+                                    </Text>
+                                </View>
+                                <View style={{width: Dimensions.get('window').width < 400 ? 280 : 380, paddingTop: 10}}>
+                                    <View collapsable={false} ref={(ref) => this.screenViewRef = ref} style={{backgroundColor: "white"}}>
+                                        <Barcode value={this.state.text ? this.state.text : " "} format={this.state.type} width={1.2} onError={() => this.setState({error: true})} flat/>
+                                        <Text style={{textAlign: "center", color: "black", fontSize: 11, marginTop: -10, paddingBottom: 10}}>{this.state.text ? this.state.text : " "}</Text>
+                                    </View>
+                                </View>
+                            </View>
+                            :
+                            <View style={{flex: 1}}>
+                                <Icon
+                                    name="warning"
+                                    type='font-awesome'
+                                    size={36}
+                                    color="red"
+                                />
+                                <Text style={{textAlign: "center", color: "black", fontSize: 11}}>Barkod Tipi ve Barkod uyumlu değil.</Text>
+                                <Text style={{textAlign: "center", color: "black", fontSize: 11}}>Barkod tipi ya da Barkod'u değiştirip tekrar deneyin.</Text>
+                            </View>
+                        }
+                    </View>
+                    <View style={{flex: 0.7, flexDirection: "column", alignItems: "flex-start", justifyContent: "center", paddingLeft: 10}}>
                         <Text style={{fontFamily: "Verdana", fontSize: 12, color: "grey", paddingBottom: 4}}>
                             Barkod
                         </Text>
@@ -132,34 +160,6 @@ class BarcodeGenerator extends AppBaseContainer {
                             value={this.state.type}
                             onChangeText={(value) => this._onTypeSelected(value)}
                         />
-                    </View>
-                    <View style={{flex: 0.4, width: Dimensions.get('window').width < 400 ? 280 : 380, alignItems: "center", paddingLeft: 10}}>
-                        {!this.state.error ?
-                            <View style={{flexDirection:'column'}}>
-                                <View style={{alignItems: "flex-start"}}>
-                                    <Text style={{fontFamily: "Verdana", fontSize: 12, color: "grey"}}>
-                                        Barkodunuz
-                                    </Text>
-                                </View>
-                                <View style={{width: Dimensions.get('window').width < 400 ? 280 : 380, paddingTop: 10}}>
-                                    <View collapsable={false} ref={(ref) => this.screenViewRef = ref} style={{backgroundColor: "white"}}>
-                                        <Barcode value={this.state.text ? this.state.text : " "} format={this.state.type} width={1.2} onError={() => this.setState({error: true})} flat/>
-                                        <Text style={{textAlign: "center", color: "black", fontSize: 11, marginTop: -10, paddingBottom: 10}}>{this.state.text ? this.state.text : " "}</Text>
-                                    </View>
-                                </View>
-                            </View>
-                                :
-                            <View style={{flex: 1}}>
-                                <Icon
-                                    name="warning"
-                                    type='font-awesome'
-                                    size={36}
-                                    color="red"
-                                />
-                                <Text style={{textAlign: "center", color: "black", fontSize: 11}}>Barkod Tipi ve Barkod uyumlu değil.</Text>
-                                <Text style={{textAlign: "center", color: "black", fontSize: 11}}>Barkod tipi ya da Barkod'u değiştirip tekrar deneyin.</Text>
-                            </View>
-                        }
                     </View>
                 </View>
             </View>
