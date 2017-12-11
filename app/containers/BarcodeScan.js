@@ -188,7 +188,9 @@ class BarcodeScan extends AppBaseContainer {
                                     this.pushToActiveScreenStack(this.getScreenMap().PermissionError.name);
                                 }, 200);
                             } else {
-                                this.setState({cameraPhotoPermissionGranted: true});
+                                setTimeout(() => {
+                                    this.setState({cameraPhotoPermissionGranted: true});
+                                }, 200);
                             }
                         });
                 }
