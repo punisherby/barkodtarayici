@@ -7,6 +7,7 @@ import Torch from 'react-native-torch';
 import Permissions from 'react-native-permissions';
 import DateHelper from "../helper/DateHelper";
 import {optionsService} from "../services/OptionsService";
+import {socialShareService} from "../services/SocialShareService";
 
 export let rootNavigator = null;
 
@@ -22,7 +23,8 @@ class BarcodeScan extends AppBaseContainer {
         cameraPhotoPermissionGranted : false,
         torchMode: "off",
         barcodeDetected : false,
-        cameraKeepOfflineInterval: null
+        cameraKeepOfflineInterval: null,
+        scannedBarcodeImage: null
     };
 
     lastBarcodeData;
@@ -143,6 +145,7 @@ class BarcodeScan extends AppBaseContainer {
                 closeOnTouchOutside={false}>
                 <View style={{backgroundColor: "#00000044", flex: 1, height: null}}>
                     <View style={{borderRadius: 2, marginHorizontal: 20, marginTop: 40, marginBottom: 40, padding: 10, backgroundColor: "white",}}>
+                        <Image style={{height: 250, width: 200}} source={{uri: 'data:image/png;base64, "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABvFBMVEUAAAAA//8AnuwAnOsAneoAm+oAm+oAm+oAm+oAm+kAnuwAmf8An+0AqtUAku0AnesAm+oAm+oAnesAqv8An+oAnuoAneoAnOkAmOoAm+oAm+oAn98AnOoAm+oAm+oAmuoAm+oAmekAnOsAm+sAmeYAnusAm+oAnOoAme0AnOoAnesAp+0Av/8Am+oAm+sAmuoAn+oAm+oAnOoAgP8Am+sAm+oAmuoAm+oAmusAmucAnOwAm+oAmusAm+oAm+oAm+kAmusAougAnOsAmukAn+wAm+sAnesAmeoAnekAmewAm+oAnOkAl+cAm+oAm+oAmukAn+sAmukAn+0Am+oAmOoAmesAm+oAm+oAm+kAme4AmesAm+oAjuMAmusAmuwAm+kAm+oAmuoAsesAm+0Am+oAneoAm+wAmusAm+oAm+oAm+gAnewAm+oAle0Am+oAm+oAmeYAmeoAmukAoOcAmuoAm+oAm+wAmuoAneoAnOkAgP8Am+oAm+oAn+8An+wAmusAnuwAs+YAmegAm+oAm+oAm+oAmuwAm+oAm+kAnesAmuoAmukAm+sAnukAnusAm+oAmuoAnOsAmukAqv9m+G5fAAAAlHRSTlMAAUSj3/v625IuNwVVBg6Z//J1Axhft5ol9ZEIrP7P8eIjZJcKdOU+RoO0HQTjtblK3VUCM/dg/a8rXesm9vSkTAtnaJ/gom5GKGNdINz4U1hRRdc+gPDm+R5L0wnQnUXzVg04uoVSW6HuIZGFHd7WFDxHK7P8eIbFsQRhrhBQtJAKN0prnKLvjBowjn8igenQfkQGdD8A7wAAAXRJREFUSMdjYBgFo2AUDCXAyMTMwsrGzsEJ5nBx41HKw4smwMfPKgAGgkLCIqJi4nj0SkhKoRotLSMAA7Jy8gIKing0KwkIKKsgC6gKIAM1dREN3Jo1gSq0tBF8HV1kvax6+moG+DULGBoZw/gmAqjA1Ay/s4HA3MISyrdC1WtthC9ebGwhquzsHRxBfCdUzc74Y9UFrtDVzd3D0wtVszd+zT6+KKr9UDX749UbEBgULIAbhODVHCoQFo5bb0QkXs1RAvhAtDFezTGx+DTHEchD8Ql4NCcSyoGJYTj1siQRzL/JKeY4NKcSzvxp6RmSWPVmZhHWnI3L1TlEFDu5edj15hcQU2gVqmHTa1pEXJFXXFKKqbmM2ALTuLC8Ak1vZRXRxa1xtS6q3ppaYrXG1NWjai1taCRCG6dJU3NLqy+ak10DGImx07LNFCOk2js6iXVyVzcLai7s6SWlbnIs6rOIbi8ViOifIDNx0uTRynoUjIIRAgALIFStaR5YjgAAAABJRU5ErkJggg=="'}} />
                         <View style={{paddingLeft: 15, paddingBottom: 15, paddingTop: 30}}>
                             <Text style={{fontWeight: "bold"}}>Barkod Tipi : </Text>
                             <Text style={{paddingRight: 15}}>{this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.type) : undefined}</Text>
@@ -251,6 +254,8 @@ class BarcodeScan extends AppBaseContainer {
         this.lastBarcodeData = e.nativeEvent;
         this._barCode.stopScan();
         this.setState({barcodeDetected: true, torchMode: "off"});
+
+        this.getScannedImageAsBase64();
 
         if(optionsService.getSingleOption(0)){
             Clipboard.setString(e.nativeEvent.data.code);
@@ -364,6 +369,50 @@ class BarcodeScan extends AppBaseContainer {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    async snapshotResize (srcData, width, height) {
+        let imageObj = new Image(),
+            canvas   = document.createElement("canvas"),
+            ctx      = canvas.getContext('2d'),
+            xStart   = 0,
+            yStart   = 0,
+            aspectRadio,
+            newWidth,
+            newHeight;
+
+        imageObj.src  = srcData;
+        canvas.width  = width;
+        canvas.height = height;
+
+        aspectRadio = imageObj.height / imageObj.width;
+
+        if(imageObj.height < imageObj.width) {
+            //horizontal
+            aspectRadio = imageObj.width / imageObj.height;
+            newHeight   = height,
+                newWidth    = aspectRadio * height;
+            xStart      = -(newWidth - width) / 2;
+        } else {
+            //vertical
+            newWidth  = width,
+                newHeight = aspectRadio * width;
+            yStart    = -(newHeight - height) / 2;
+        }
+
+        await ctx.drawImage(imageObj, xStart, yStart, newWidth, newHeight);
+
+        return canvas.toDataURL("image/png", 0.75);
+    }
+
+    getScannedImageAsBase64(){
+        socialShareService.takeScreenCaptureInBase64(this._barCode)
+            .then((data) => {
+                this.snapshotResize(data, 150, 150)
+                    .then((dataImage) => {
+                        this.setState({scannedBarcodeImage: dataImage})
+                    });
+            })
     }
 }
 

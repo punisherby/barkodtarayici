@@ -39,6 +39,11 @@ const list = [
         title: 'İletişim',
         icon: 'contact-mail',
         iconType: 'material-community',
+    },
+    {
+        title: 'Alışveriş',
+        icon: 'ios-shirt-outline',
+        iconType: 'ionicon',
     }
 ]
 
