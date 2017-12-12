@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, BackHandler, AsyncStorage, Clipboard} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, BackHandler, AsyncStorage, Clipboard, ActivityIndicator} from "react-native";
 import Barcode from 'react-native-smart-barcode';
 import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
@@ -20,6 +20,7 @@ class BarcodeScan extends AppBaseContainer {
     };
 
     state = {
+        shouldCameraShow: false,
         cameraPhotoPermissionGranted : false,
         torchMode: "off",
         barcodeDetected : false,
@@ -55,11 +56,12 @@ class BarcodeScan extends AppBaseContainer {
     }
 
     componentWillUnmount() {
+        this.setState({shouldCameraShow: false});
+        clearInterval(this.cameraKeepOfflineInterval);
+
         if (Platform.OS == "android") {
             this.hardwareBackPressListener.remove();
         }
-
-        clearInterval(this.cameraKeepOfflineInterval);
     }
 
     componentWillReceiveProps(props) {
@@ -116,7 +118,7 @@ class BarcodeScan extends AppBaseContainer {
                         <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Geçmiş</Text>
                     </TouchableOpacity>
                 </View>
-                {this.state.cameraPhotoPermissionGranted ? this._renderBarcodeScanner() : undefined}
+                {this.state.shouldCameraShow && this.state.cameraPhotoPermissionGranted ? this._renderBarcodeScanner() : this._renderSpinner()}
                 {this._renderBarcodeFoundModal()}
             </View>
         );
@@ -133,6 +135,14 @@ class BarcodeScan extends AppBaseContainer {
         )
     }
 
+    _renderSpinner() {
+        return (
+            <View style={{flex: 0.75, justifyContent: "center"}}>
+                <ActivityIndicator color="#41bfeb" size="large"/>
+            </View>
+        )
+    }
+
     _renderBarcodeFoundModal() {
         return (
             <Modal
@@ -145,7 +155,6 @@ class BarcodeScan extends AppBaseContainer {
                 closeOnTouchOutside={false}>
                 <View style={{backgroundColor: "#00000044", flex: 1, height: null}}>
                     <View style={{borderRadius: 2, marginHorizontal: 20, marginTop: 40, marginBottom: 40, padding: 10, backgroundColor: "white",}}>
-                        <Image style={{height: 250, width: 200}} source={{uri: 'data:image/png;base64, "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABvFBMVEUAAAAA//8AnuwAnOsAneoAm+oAm+oAm+oAm+oAm+kAnuwAmf8An+0AqtUAku0AnesAm+oAm+oAnesAqv8An+oAnuoAneoAnOkAmOoAm+oAm+oAn98AnOoAm+oAm+oAmuoAm+oAmekAnOsAm+sAmeYAnusAm+oAnOoAme0AnOoAnesAp+0Av/8Am+oAm+sAmuoAn+oAm+oAnOoAgP8Am+sAm+oAmuoAm+oAmusAmucAnOwAm+oAmusAm+oAm+oAm+kAmusAougAnOsAmukAn+wAm+sAnesAmeoAnekAmewAm+oAnOkAl+cAm+oAm+oAmukAn+sAmukAn+0Am+oAmOoAmesAm+oAm+oAm+kAme4AmesAm+oAjuMAmusAmuwAm+kAm+oAmuoAsesAm+0Am+oAneoAm+wAmusAm+oAm+oAm+gAnewAm+oAle0Am+oAm+oAmeYAmeoAmukAoOcAmuoAm+oAm+wAmuoAneoAnOkAgP8Am+oAm+oAn+8An+wAmusAnuwAs+YAmegAm+oAm+oAm+oAmuwAm+oAm+kAnesAmuoAmukAm+sAnukAnusAm+oAmuoAnOsAmukAqv9m+G5fAAAAlHRSTlMAAUSj3/v625IuNwVVBg6Z//J1Axhft5ol9ZEIrP7P8eIjZJcKdOU+RoO0HQTjtblK3VUCM/dg/a8rXesm9vSkTAtnaJ/gom5GKGNdINz4U1hRRdc+gPDm+R5L0wnQnUXzVg04uoVSW6HuIZGFHd7WFDxHK7P8eIbFsQRhrhBQtJAKN0prnKLvjBowjn8igenQfkQGdD8A7wAAAXRJREFUSMdjYBgFo2AUDCXAyMTMwsrGzsEJ5nBx41HKw4smwMfPKgAGgkLCIqJi4nj0SkhKoRotLSMAA7Jy8gIKing0KwkIKKsgC6gKIAM1dREN3Jo1gSq0tBF8HV1kvax6+moG+DULGBoZw/gmAqjA1Ay/s4HA3MISyrdC1WtthC9ebGwhquzsHRxBfCdUzc74Y9UFrtDVzd3D0wtVszd+zT6+KKr9UDX749UbEBgULIAbhODVHCoQFo5bb0QkXs1RAvhAtDFezTGx+DTHEchD8Ql4NCcSyoGJYTj1siQRzL/JKeY4NKcSzvxp6RmSWPVmZhHWnI3L1TlEFDu5edj15hcQU2gVqmHTa1pEXJFXXFKKqbmM2ALTuLC8Ak1vZRXRxa1xtS6q3ppaYrXG1NWjai1taCRCG6dJU3NLqy+ak10DGImx07LNFCOk2js6iXVyVzcLai7s6SWlbnIs6rOIbi8ViOifIDNx0uTRynoUjIIRAgALIFStaR5YjgAAAABJRU5ErkJggg=="'}} />
                         <View style={{paddingLeft: 15, paddingBottom: 15, paddingTop: 30}}>
                             <Text style={{fontWeight: "bold"}}>Barkod Tipi : </Text>
                             <Text style={{paddingRight: 15}}>{this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.type) : undefined}</Text>
@@ -206,7 +215,7 @@ class BarcodeScan extends AppBaseContainer {
                                 }, 200);
                             } else {
                                 setTimeout(() => {
-                                    this.setState({cameraPhotoPermissionGranted: true});
+                                    this.setState({cameraPhotoPermissionGranted: true, shouldCameraShow: true});
                                 }, 200);
                             }
                         });
@@ -255,7 +264,7 @@ class BarcodeScan extends AppBaseContainer {
         this._barCode.stopScan();
         this.setState({barcodeDetected: true, torchMode: "off"});
 
-        this.getScannedImageAsBase64();
+        //this.getScannedImageAsBase64();
 
         if(optionsService.getSingleOption(0)){
             Clipboard.setString(e.nativeEvent.data.code);

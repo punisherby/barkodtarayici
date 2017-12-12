@@ -41,7 +41,7 @@ const list = [
         iconType: 'material-community',
     },
     {
-        title: 'Alışveriş',
+        title: 'Alışveriş (Çok Yakında...)',
         icon: 'ios-shirt-outline',
         iconType: 'ionicon',
     }
