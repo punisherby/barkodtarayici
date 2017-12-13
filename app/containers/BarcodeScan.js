@@ -8,7 +8,6 @@ import Permissions from 'react-native-permissions';
 import DateHelper from "../helper/DateHelper";
 import {optionsService} from "../services/OptionsService";
 import {socialShareService} from "../services/SocialShareService";
-import * as Animatable from 'react-native-animatable';
 
 export let rootNavigator = null;
 
@@ -128,10 +127,9 @@ class BarcodeScan extends AppBaseContainer {
     _renderBarcodeScanner() {
         return (
             <View style={{flex: 0.75, backgroundColor: "transparent"}}>
-                <Animatable.Text animation="pulse" delay={1000} duration={3000} iterationCount={"infinite"}
-                                 style={{fontFamily: "Verdana", fontSize: 12, color: "#bfbfbf", textAlign: "center", paddingRight: 10, paddingLeft: 10, marginBottom: -32, zIndex: 10}}>
+                <Text style={{fontFamily: "Verdana", fontSize: 12, color: "#bfbfbf", textAlign: "center", paddingRight: 10, paddingLeft: 10, marginBottom: -32, zIndex: 10}}>
                     Barkod veya QR kodu okutmak için orta çerçeveyi{"\n"}görüntüye odaklayın
-                </Animatable.Text>
+                </Text>
                 <Barcode style={{flex: 1, backgroundColor: "transparent"}}
                      ref={ component => this._barCode = component }
                      scannerRectWidth={300}
