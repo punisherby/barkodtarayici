@@ -153,7 +153,7 @@ class BarcodeScan extends AppBaseContainer {
                         containerStyle={{backgroundColor: "transparent", width: 36, height: 36}}
                         underlayColor="transparent"
                         color="#41bfeb"
-                        onPress={() =>this.dropdown.alertWithType('info', 'Desteklenen Barkod Formatları', barkodInfoText)}
+                        onPress={() =>this.dropdown.alertWithType('info', 'Desteklenen Tarayıcı Formatları', barkodInfoText)}
                     />
                 </View>
                 <Barcode style={{flex: 1, backgroundColor: "transparent"}}
