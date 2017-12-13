@@ -8,8 +8,21 @@ import Permissions from 'react-native-permissions';
 import DateHelper from "../helper/DateHelper";
 import {optionsService} from "../services/OptionsService";
 import {socialShareService} from "../services/SocialShareService";
+import DropdownAlert from 'react-native-dropdownalert';
 
 export let rootNavigator = null;
+
+const barkodInfoText= "QR Code\n" +
+    "UPC-A, " + "UPC-E, " + "UPC_EAN_EXTENSION\n" +
+    "EAN-8, " + "EAN-13\n" +
+    "Code 39, " + "Code 93, " + "Code 128\n" +
+    "Aztec (beta)\n" +
+    "Data Matrix\n" +
+    "Codabar\n" +
+    "PDF 417 (beta)\n" +
+    "ITF\n" +
+    "MaxiCode\n" +
+    "RSS-14, " + "RSS-Expanded"
 
 class BarcodeScan extends AppBaseContainer {
 
@@ -30,6 +43,11 @@ class BarcodeScan extends AppBaseContainer {
 
     lastBarcodeData;
     lastBackPagePressedTime;
+    dropdown;
+
+    onError() {
+
+    }
 
     constructor(props){
         super(props);
@@ -62,10 +80,6 @@ class BarcodeScan extends AppBaseContainer {
         if (Platform.OS == "android") {
             this.hardwareBackPressListener.remove();
         }
-    }
-
-    componentWillReceiveProps(props) {
-        console.log("hey heyhey", props);
     }
 
     render() {
@@ -120,6 +134,7 @@ class BarcodeScan extends AppBaseContainer {
                 </View>
                 {this.state.shouldCameraShow && this.state.cameraPhotoPermissionGranted ? this._renderBarcodeScanner() : this._renderSpinner()}
                 {this._renderBarcodeFoundModal()}
+                <DropdownAlert ref={ref => this.dropdown = ref} infoColor="#41bfeb" messageNumOfLines={11} closeInterval={5000}/>
             </View>
         );
     }
@@ -127,9 +142,20 @@ class BarcodeScan extends AppBaseContainer {
     _renderBarcodeScanner() {
         return (
             <View style={{flex: 0.75, backgroundColor: "transparent"}}>
-                <Text style={{fontFamily: "Verdana", fontSize: 12, color: "#bfbfbf", textAlign: "center", paddingRight: 10, paddingLeft: 10, marginBottom: -32, zIndex: 10}}>
-                    Barkod veya QR kodu okutmak için orta çerçeveyi{"\n"}görüntüye odaklayın
-                </Text>
+                <View style={{paddingRight: 10, paddingLeft: 10, marginBottom: -65, zIndex: 10, alignItems: "center"}}>
+                    <Text style={{fontFamily: "Verdana", fontSize: 12, color: "#bfbfbf", textAlign: "center"}}>
+                        Barkod veya QR kodu okutmak için orta çerçeveyi{"\n"}görüntüye odaklayın
+                    </Text>
+                    <Icon
+                        name="info-circle"
+                        type='font-awesome'
+                        size={36}
+                        containerStyle={{backgroundColor: "transparent", width: 36, height: 36}}
+                        underlayColor="transparent"
+                        color="#41bfeb"
+                        onPress={() =>this.dropdown.alertWithType('info', 'Desteklenen Barkod Formatları', barkodInfoText)}
+                    />
+                </View>
                 <Barcode style={{flex: 1, backgroundColor: "transparent"}}
                      ref={ component => this._barCode = component }
                      scannerRectWidth={300}
