@@ -1,12 +1,13 @@
 import BarcodeScan from "./BarcodeScan";
 import PermissionError from "./PermissionError";
 import Drawer from "./drawer/Drawer";
-import QRCodeGenerator from "./QRCodeGenerator";
+import QRCodeGenerator from "./qrcode/QRCodeGenerator";
 import PreviousBarcodes from "./PreviousBarcodes";
 import Settings from "./Settings";
 import About from "./About";
 import Contact from "./Contact";
 import BarcodeGenerator from "./BarcodeGenerator";
+import QREventCodeGenerator from "./qrcode/QREventCodeGenerator";
 
 export const SCREENS_MAP = {
     Drawer: {
@@ -44,6 +45,10 @@ export const SCREENS_MAP = {
     PermissionError: {
         name: 'barkod.PermissionError',
         screen: PermissionError
+    },
+    QREventCodeGenerator: {
+        name: 'barkod.QREventCodeGenerator',
+        screen: QREventCodeGenerator
     },
 
 };

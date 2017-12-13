@@ -1,12 +1,12 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, StyleSheet, TextInput, Dimensions, CameraRoll , ToastAndroid} from "react-native";
+import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, StyleSheet, TextInput, Dimensions, CameraRoll , ToastAndroid, ScrollView} from "react-native";
 import {Icon, Button} from "react-native-elements";
-import AppBaseContainer from "./AppBaseContainer";
+import AppBaseContainer from "../AppBaseContainer";
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from "react-native-fs"
-import {socialShareService} from "../services/SocialShareService";
+import {socialShareService} from "../../services/SocialShareService";
 
-class QRCodeGenerator extends AppBaseContainer {
+class QREventCodeGenerator extends AppBaseContainer {
 
     static navigatorStyle = {
         tabBarHidden: true,
@@ -44,7 +44,7 @@ class QRCodeGenerator extends AppBaseContainer {
                         </TouchableOpacity>
                     </View>
                     <View style={{flex: 0.8}}>
-                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>QR Kod Oluştur</Text>
+                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>QR Etkinlik Kodu Oluştur</Text>
                     </View>
                     <View style={{flex: 0.1}}>
                     </View>
@@ -72,24 +72,55 @@ class QRCodeGenerator extends AppBaseContainer {
                 </View>
 
                 <View style={{flex: 0.70, padding: 4, flexDirection: "column", alignItems: "center"}}>
-                    <View style={styles.container}>
-                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black", paddingBottom: 15}}>
-                            Aşağıdaki alana bir yazı, websitesi adresi, gizli mesaj vb. girip kendi QR kodunuzu oluşturabilirsiniz.
-                        </Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={(text) => this.setState({text: text})}
-                            value={this.state.text}
-                            autoCapitalize="none"
-                            placeholder=" Örn: http://www.facebook.com"
-                            underlineColorAndroid="white"
-                        />
-                        <QRCode
-                            getRef={(c) => (this.svg = c)}
-                            value={this.state.text ? this.state.text : " "}
-                            size={200}
-                            color='black'/>
-                    </View>
+                    <ScrollView style={styles.container} scrollEnabled pagingEnabled>
+                        <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => this.setState({text: text})}
+                                value={this.state.text}
+                                autoCapitalize="none"
+                                placeholder="Etkinlik İsmi"
+                                underlineColorAndroid="white"
+                            />
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => this.setState({text: text})}
+                                value={this.state.text}
+                                autoCapitalize="none"
+                                placeholder="Açıklama"
+                                underlineColorAndroid="white"
+                            />
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => this.setState({text: text})}
+                                value={this.state.text}
+                                autoCapitalize="none"
+                                placeholder="Lokasyon"
+                                underlineColorAndroid="white"
+                            />
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => this.setState({text: text})}
+                                value={this.state.text}
+                                autoCapitalize="none"
+                                placeholder="Başlangıç Saati (Saat:Dakika)"
+                                underlineColorAndroid="white"
+                            />
+                            <TextInput
+                                style={[styles.input, {marginBottom: 15}]}
+                                onChangeText={(text) => this.setState({text: text})}
+                                value={this.state.text}
+                                autoCapitalize="none"
+                                placeholder="Bitiş Saati (Saat:Dakika)"
+                                underlineColorAndroid="white"
+                            />
+                            <QRCode
+                                getRef={(c) => (this.svg = c)}
+                                value={this.state.text ? this.state.text : " "}
+                                size={200}
+                                color='black'/>
+                        </View>
+                    </ScrollView>
                 </View>
             </View>
         );
@@ -126,20 +157,18 @@ class QRCodeGenerator extends AppBaseContainer {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center'
+        backgroundColor: 'white'
     },
 
     input: {
         width: Dimensions.get('window').width < 400 ? 300 : 400,
-        height: 40,
+        height: 30,
         borderColor: 'gray',
         borderWidth: 1,
-        margin: 10,
+        margin: 5,
         borderRadius: 5,
         padding: 5,
     }
 });
 
-export default (QRCodeGenerator);
+export default (QREventCodeGenerator);
