@@ -8,21 +8,9 @@ import Permissions from 'react-native-permissions';
 import DateHelper from "../helper/DateHelper";
 import {optionsService} from "../services/OptionsService";
 import {socialShareService} from "../services/SocialShareService";
-import DropdownAlert from 'react-native-dropdownalert';
+import {dropDownAlertService} from "../services/DropDownAlertService";
 
 export let rootNavigator = null;
-
-const barkodInfoText= "QR Code\n" +
-    "UPC-A, " + "UPC-E, " + "UPC_EAN_EXTENSION\n" +
-    "EAN-8, " + "EAN-13\n" +
-    "Code 39, " + "Code 93, " + "Code 128\n" +
-    "Aztec (beta)\n" +
-    "Data Matrix\n" +
-    "Codabar\n" +
-    "PDF 417 (beta)\n" +
-    "ITF\n" +
-    "MaxiCode\n" +
-    "RSS-14, " + "RSS-Expanded"
 
 class BarcodeScan extends AppBaseContainer {
 
@@ -37,17 +25,13 @@ class BarcodeScan extends AppBaseContainer {
         cameraPhotoPermissionGranted : false,
         torchMode: "off",
         barcodeDetected : false,
+        barcodeDetectedEvent: false,
         cameraKeepOfflineInterval: null,
         scannedBarcodeImage: null
     };
 
     lastBarcodeData;
     lastBackPagePressedTime;
-    dropdown;
-
-    onError() {
-
-    }
 
     constructor(props){
         super(props);
@@ -61,7 +45,7 @@ class BarcodeScan extends AppBaseContainer {
         }, 200);
 
         this.cameraKeepOfflineInterval = setInterval(() => {
-            if (this.state.barcodeDetected) {
+            if (this.state.barcodeDetected || this.state.barcodeDetectedEvent) {
                 this._barCode.stopScan();
             }
         }, 1 * 1000);
@@ -99,7 +83,16 @@ class BarcodeScan extends AppBaseContainer {
                     <View style={{flex: 0.8}}>
                         <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>Barkod ve QR Kod Okuyucu</Text>
                     </View>
-                    <View style={{flex: 0.1}}>
+                    <View style={{flex: 0.1, alignItems: "center", paddingRight: 10}}>
+                        <Icon
+                            name="info-circle"
+                            type='font-awesome'
+                            size={30}
+                            containerStyle={{backgroundColor: "transparent", width: 36, height: 36}}
+                            underlayColor="transparent"
+                            color="white"
+                            onPress={() =>this.dropdown.alertWithType('info', dropDownAlertService.barcodeScanInfoHeaderText, dropDownAlertService.barcodeScanInfoText)}
+                        />
                     </View>
                 </View>
 
@@ -133,8 +126,9 @@ class BarcodeScan extends AppBaseContainer {
                     </TouchableOpacity>
                 </View>
                 {this.state.shouldCameraShow && this.state.cameraPhotoPermissionGranted ? this._renderBarcodeScanner() : this._renderSpinner()}
-                {this._renderBarcodeFoundModal()}
-                <DropdownAlert ref={ref => this.dropdown = ref} infoColor="#41bfeb" messageNumOfLines={11} closeInterval={5000}/>
+                {this.state.barcodeDetected ? this._renderBarcodeFoundModal() : undefined}
+                {this.state.barcodeDetectedEvent ? this._renderBarcodeFoundEventModal() : undefined}
+                {dropDownAlertService.renderDropDownElement(this, 11, 5000)}
             </View>
         );
     }
@@ -142,19 +136,10 @@ class BarcodeScan extends AppBaseContainer {
     _renderBarcodeScanner() {
         return (
             <View style={{flex: 0.75, backgroundColor: "transparent"}}>
-                <View style={{paddingRight: 10, paddingLeft: 10, marginBottom: -65, zIndex: 10, alignItems: "center"}}>
+                <View style={{paddingRight: 10, paddingLeft: 10, marginBottom: -30, zIndex: 10, alignItems: "center"}}>
                     <Text style={{fontFamily: "Verdana", fontSize: 12, color: "#bfbfbf", textAlign: "center"}}>
-                        Barkod veya QR kodu okutmak için orta çerçeveyi{"\n"}görüntüye odaklayın
+                        Barkod veya QR kodu okutmak için{"\n"}orta çerçeveyi görüntüye odaklayın
                     </Text>
-                    <Icon
-                        name="info-circle"
-                        type='font-awesome'
-                        size={36}
-                        containerStyle={{backgroundColor: "transparent", width: 36, height: 36}}
-                        underlayColor="transparent"
-                        color="#41bfeb"
-                        onPress={() =>this.dropdown.alertWithType('info', 'Desteklenen Tarayıcı Formatları', barkodInfoText)}
-                    />
                 </View>
                 <Barcode style={{flex: 1, backgroundColor: "transparent"}}
                      ref={ component => this._barCode = component }
@@ -230,6 +215,83 @@ class BarcodeScan extends AppBaseContainer {
         )
     }
 
+    _renderBarcodeFoundEventModal() {
+        let activity = (this.lastBarcodeData.data.code).replace("BEGIN:VEVENT" + "\r\n", "").replace("\r\n" + "END:VEVENT", "").split("\r\n");
+        let title = activity[0].replace("SUMMARY:", "");
+        let location = activity[1].replace("LOCATION:", "");
+        let desc = activity[2].replace("DESCRIPTION:", "")
+        let startDate = activity[3].replace("DTSTART:", "");
+        let endDate = activity[4].replace("DTEND:", "");
+
+        return (
+            <Modal
+                offset={50}
+                visible={this.state.barcodeDetectedEvent}
+                transparent={true}
+                onRequestClose={() => {
+                }}
+                animationType={'fade'}
+                closeOnTouchOutside={false}>
+                <View style={{backgroundColor: "#00000044", flex: 1, height: null}}>
+                    <View style={{borderRadius: 2, marginHorizontal: 20, marginTop: 40, marginBottom: 40, padding: 10, backgroundColor: "white",}}>
+                        <View collapsable={false} ref={(ref) => this.screenViewRef = ref} style={{backgroundColor: "#41bfeb", paddingBottom: 10, borderRadius: 6}}>
+                            <Icon
+                                name='event-available'
+                                type='material-icons'
+                                size={36}
+                                containerStyle={{marginBottom: 15, paddingTop: 10}}
+                                color="black"
+                            />
+                            <View style={{paddingLeft: 15, paddingBottom: 5}}>
+                                <Text style={{fontWeight: "bold"}}>Etkinlik Adı : </Text>
+                                <Text style={{paddingRight: 15}}>{title}</Text>
+                            </View>
+                            <View style={{paddingLeft: 15, paddingBottom: 5}}>
+                                <Text style={{fontWeight: "bold"}}>Açıklama : </Text>
+                                <Text style={{paddingRight: 15}}>{desc}</Text>
+                            </View>
+                            <View style={{paddingLeft: 15, paddingBottom: 5}}>
+                                <Text style={{fontWeight: "bold"}}>Lokasyon : </Text>
+                                <Text style={{paddingRight: 15}}>{location}</Text>
+                            </View>
+                            <View style={{paddingLeft: 15, paddingBottom: 5}}>
+                                <Text style={{fontWeight: "bold"}}>Başlangıç : </Text>
+                                <Text style={{paddingRight: 15}}>{startDate}</Text>
+                            </View>
+                            <View style={{paddingLeft: 15, paddingBottom: 5}}>
+                                <Text style={{fontWeight: "bold"}}>Bitiş : </Text>
+                                <Text style={{paddingRight: 15}}>{endDate}</Text>
+                            </View>
+                        </View>
+                        <Icon
+                            name='md-arrow-round-down'
+                            type='ionicon'
+                            size={22}
+                            containerStyle={{marginBottom: 15}}
+                            color="black"
+                        />
+
+                        <Button
+                            onPress={() => this._onEventSharePressed(this.lastBarcodeData.data.code)}
+                            buttonStyle={{marginBottom: 8}}
+                            backgroundColor="#41bfeb"
+                            borderRadius={4}
+                            icon={{name: 'share', type: 'font-awesome'}}
+                            title={'Etkinliği Paylaş'} />
+
+                        <Button
+                            onPress={() => this._resetBarcodeScan()}
+                            buttonStyle={{marginBottom: 20}}
+                            backgroundColor="#41bfeb"
+                            borderRadius={4}
+                            icon={{name: 'close', type: 'font-awesome'}}
+                            title={'Çıkış / Yeni Arama'} />
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
     _checkPermission() {
         Permissions.request('camera')
             .then(response => {
@@ -288,26 +350,39 @@ class BarcodeScan extends AppBaseContainer {
     }
 
     _onBarCodeRead(e) {
-        if (this.state.barcodeDetected === true) {
+        if (this.state.barcodeDetected || this.state.barcodeDetectedEvent) {
             return;
         }
         this.lastBarcodeData = e.nativeEvent;
         this._barCode.stopScan();
-        this.setState({barcodeDetected: true, torchMode: "off"});
 
-        //this.getScannedImageAsBase64();
+        let ifQRType = this._detectIfQRCodeType(this.lastBarcodeData.data);
 
-        if(optionsService.getSingleOption(0)){
-            Clipboard.setString(e.nativeEvent.data.code);
+        if (ifQRType) {
+            if (ifQRType == "url") {
+                this.setState({barcodeDetected: true, torchMode: "off"});
+                this._openQRCodeURL(this.lastBarcodeData.data);
+            } else if (ifQRType == "event") {
+                this.setState({barcodeDetectedEvent: true, torchMode: "off"});
+            }
+            else {
+                this.setState({barcodeDetected: true, torchMode: "off"});
+            }
+        } else {
+            this.setState({barcodeDetected: true, torchMode: "off"});
         }
 
-        this._saveItemAsHistoryItem(e.nativeEvent);
+        console.log ("ifQRType", ifQRType);
 
-        this._openURLIfQRCodeContainsValidURL(e.nativeEvent.data);
+        if(optionsService.getSingleOption(0)){
+            Clipboard.setString(this.lastBarcodeData.data.code);
+        }
+
+        this._saveItemAsHistoryItem(this.lastBarcodeData);
     }
 
     _resetBarcodeScan() {
-        this.setState({barcodeDetected: false});
+        this.setState({barcodeDetected: false, barcodeDetectedEvent: false});
 
         setTimeout(() => {
             this._barCode.startScan()
@@ -340,6 +415,10 @@ class BarcodeScan extends AppBaseContainer {
         });
     }
 
+    _onEventSharePressed() {
+        socialShareService.startNativeSharingWithRef(this.screenViewRef, "Bu Etkinlik, Barkod Tarayıcı ile oluşturulmuştur. Android uygulaması: https://play.google.com/store/apps/details?id=com.barkodtarayici");
+    }
+
     _blockBackPage() {
         let currentTime = DateHelper.getTimeInMilliSeconds();
         if (this.lastBackPagePressedTime) {
@@ -355,34 +434,41 @@ class BarcodeScan extends AppBaseContainer {
         return true;
     }
 
-    _openURLIfQRCodeContainsValidURL(data) {
+    _openQRCodeURL(data) {
         if (!optionsService.getSingleOption(1)) {
-            return;
+            return false;
         }
-
-        if (data.type.toLowerCase().indexOf("qr") == -1) {
-            return;
-        }
-
-        let urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})/g;
-
 
         let potentialUrl = data.code.toLowerCase();
 
-        if (urlRegex.test(potentialUrl)) {
-            if (!(potentialUrl.indexOf("http") == 0 || potentialUrl.indexOf("https") == 0 || potentialUrl.indexOf("ftp") == 0)){
-                potentialUrl = "http://" + potentialUrl;
-            }
+        if (!(potentialUrl.indexOf("http") == 0 || potentialUrl.indexOf("https") == 0 || potentialUrl.indexOf("ftp") == 0)){
+            potentialUrl = "http://" + potentialUrl;
+        }
 
-            Linking.canOpenURL(potentialUrl).then(supported => {
-                console.log(potentialUrl);
-                if (supported){
-                    return Linking.openURL(potentialUrl);
-                }
-            }).catch(err => {
-                console.log(potentialUrl);
-                console.log(err);
-            });
+        Linking.canOpenURL(potentialUrl).then(supported => {
+            if (supported){
+                return Linking.openURL(potentialUrl);
+            }
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+
+    _detectIfQRCodeType(data) {
+        const urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})/g;
+
+        if (data.type.toLowerCase().indexOf("qr") == -1) {
+            return null;
+        }
+        let code = data.code;
+
+        if(urlRegex.test(code.toLowerCase())) {
+            return "url";
+        } else if (code.indexOf("BEGIN:VEVENT") > -1 && code.indexOf("END:VEVENT") > -1 ) {
+            return "event";
+        }
+        else {
+            return "qr";
         }
     }
 

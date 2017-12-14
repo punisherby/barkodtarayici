@@ -118,7 +118,7 @@ class QRCodeGenerator extends AppBaseContainer {
         let dataImage = "data:image/png;base64,";
         this.svg.toDataURL((data) => {
             dataImage += data;
-            socialShareService.startNativeSharing(dataImage)
+            socialShareService.startNativeSharing(dataImage, "Bu QR Kod Barkod Tarayıcı ile oluşturulmuştur. İçeriğini öğrenmek için Android uygulaması: https://play.google.com/store/apps/details?id=com.barkodtarayici")
         })
     }
 }

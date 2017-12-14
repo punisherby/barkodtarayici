@@ -5,6 +5,9 @@ import AppBaseContainer from "../AppBaseContainer";
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from "react-native-fs"
 import {socialShareService} from "../../services/SocialShareService";
+import {dropDownAlertService} from "../../services/DropDownAlertService";
+import _ from "lodash";
+import DateHelper from "../../helper/DateHelper";
 
 class QREventCodeGenerator extends AppBaseContainer {
 
@@ -15,18 +18,19 @@ class QREventCodeGenerator extends AppBaseContainer {
     };
 
     state = {
-        text: '',
+        eventTitle: '',
+        eventDesc: '',
+        eventLocation: '',
+        startTime: '',
+        endTime: '',
+        qrCodeText: ''
     };
 
     constructor(props){
         super(props);
         this.setStyle(this.navigatorStyle);
-    }
-
-    componentDidMount() {
-    }
-
-    componentWillUnmount() {
+        this.onChangeStartTextDelayed = _.debounce((text) => this._onDateStartTextStringChange(text), 1500);
+        this.onChangeEndTextDelayed = _.debounce((text) => this._onDateEndTextStringChange(text), 1500);
     }
 
     render() {
@@ -46,7 +50,16 @@ class QREventCodeGenerator extends AppBaseContainer {
                     <View style={{flex: 0.8}}>
                         <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>QR Etkinlik Kodu Oluştur</Text>
                     </View>
-                    <View style={{flex: 0.1}}>
+                    <View style={{flex: 0.1, alignItems: "center", paddingRight: 10}}>
+                        <Icon
+                            name="info-circle"
+                            type='font-awesome'
+                            size={30}
+                            containerStyle={{backgroundColor: "transparent", width: 36, height: 36}}
+                            underlayColor="transparent"
+                            color="white"
+                            onPress={() => this.dropdown.alertWithType('info', dropDownAlertService.QREventGeneratorInfoHeaderText, dropDownAlertService.QREventGeneratorInfoText)}
+                        />
                     </View>
                 </View>
 
@@ -76,54 +89,80 @@ class QREventCodeGenerator extends AppBaseContainer {
                         <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
                             <TextInput
                                 style={styles.input}
-                                onChangeText={(text) => this.setState({text: text})}
-                                value={this.state.text}
+                                onChangeText={(text) => {this.state.eventTitle  = text ; this.setState({qrCodeText: this._qrEventTextBuilder()})}}
+                                value={this.state.eventTitle}
                                 autoCapitalize="none"
                                 placeholder="Etkinlik İsmi"
                                 underlineColorAndroid="white"
                             />
                             <TextInput
                                 style={styles.input}
-                                onChangeText={(text) => this.setState({text: text})}
-                                value={this.state.text}
+                                onChangeText={(text) => {this.state.eventDesc  = text ; this.setState({qrCodeText: this._qrEventTextBuilder()})}}
+                                value={this.state.eventDesc}
                                 autoCapitalize="none"
                                 placeholder="Açıklama"
                                 underlineColorAndroid="white"
                             />
                             <TextInput
                                 style={styles.input}
-                                onChangeText={(text) => this.setState({text: text})}
-                                value={this.state.text}
+                                onChangeText={(text) => {this.state.eventLocation  = text ; this.setState({qrCodeText: this._qrEventTextBuilder()})}}
+                                value={this.state.eventLocation}
                                 autoCapitalize="none"
                                 placeholder="Lokasyon"
                                 underlineColorAndroid="white"
                             />
                             <TextInput
                                 style={styles.input}
-                                onChangeText={(text) => this.setState({text: text})}
-                                value={this.state.text}
+                                onChangeText={this.onChangeStartTextDelayed}
                                 autoCapitalize="none"
-                                placeholder="Başlangıç Saati (Saat:Dakika)"
+                                placeholder="Başln. Tarih Saat (GG/AA/YYYY Saat:Dakika)"
                                 underlineColorAndroid="white"
                             />
                             <TextInput
                                 style={[styles.input, {marginBottom: 15}]}
-                                onChangeText={(text) => this.setState({text: text})}
-                                value={this.state.text}
+                                onChangeText={this.onChangeEndTextDelayed}
                                 autoCapitalize="none"
-                                placeholder="Bitiş Saati (Saat:Dakika)"
+                                placeholder="Bitiş Tarih Saat (GG/AA/YYYY Saat:Dakika)"
                                 underlineColorAndroid="white"
                             />
                             <QRCode
                                 getRef={(c) => (this.svg = c)}
-                                value={this.state.text ? this.state.text : " "}
+                                value={this.state.qrCodeText ? this.state.qrCodeText : " "}
                                 size={200}
                                 color='black'/>
                         </View>
                     </ScrollView>
                 </View>
+                {dropDownAlertService.renderDropDownElement(this, 4, 5000)}
             </View>
         );
+    }
+
+    _onDateStartTextStringChange(text) {
+        if (!DateHelper.isValidDateTime(text)) {
+            this.dropdown.alertWithType('warn', dropDownAlertService.QREventGeneratorTimeFormatErrorHeaderText, dropDownAlertService.QREventGeneratorTimeFormatErrorText)
+        } else {
+            this.state.startTime  = text ;
+        }
+    }
+
+    _onDateEndTextStringChange(text) {
+        if (!DateHelper.isValidDateTime(text)) {
+            this.dropdown.alertWithType('warn', dropDownAlertService.QREventGeneratorTimeFormatErrorHeaderText, dropDownAlertService.QREventGeneratorTimeFormatErrorText)
+        } else {
+            this.state.endTime  = text ;
+            this.setState({qrCodeText: this._qrEventTextBuilder()});
+        }
+    }
+
+    _qrEventTextBuilder() {
+        return "BEGIN:VEVENT" + "\r\n" + "SUMMARY:" + this.state.eventTitle
+            + "\r\n" + "LOCATION:" + this.state.eventLocation
+            + "\r\n" + "DESCRIPTION:" + this.state.eventDesc
+            + "\r\n" + "DTSTART:" + this.state.startTime
+            + "\r\n" + "DTEND:" + this.state.endTime
+            + "\r\n" + "END:VEVENT";
+
     }
 
     saveQrToDisk() {
@@ -149,7 +188,7 @@ class QREventCodeGenerator extends AppBaseContainer {
         let dataImage = "data:image/png;base64,";
         this.svg.toDataURL((data) => {
             dataImage += data;
-            socialShareService.startNativeSharing(dataImage)
+            socialShareService.startNativeSharing(dataImage, "Bu Etkinlik QR Kodu Barkod Tarayıcı ile oluşturulmuştur. İçeriğini öğrenmek için Android uygulaması: https://play.google.com/store/apps/details?id=com.barkodtarayici")
         })
     }
 }

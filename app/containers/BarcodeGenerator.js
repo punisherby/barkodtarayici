@@ -192,7 +192,7 @@ class BarcodeGenerator extends AppBaseContainer {
     }
 
     share() {
-        socialShareService.startNativeSharingWithRef(this.screenViewRef);
+        socialShareService.startNativeSharingWithRef(this.screenViewRef, "Bu Barkod, Barkod Tarayıcı ile oluşturulmuştur. İçeriğini öğrenmek için Android uygulaması: https://play.google.com/store/apps/details?id=com.barkodtarayici");
     }
 }
 

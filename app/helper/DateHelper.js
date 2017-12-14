@@ -5,6 +5,10 @@ moment.locale('tr');
 
 export default DateHelper = {
 
+    isValidDateTime(date) {
+        return moment(date, "DD/MM/YYYY HH:mm", true).isValid();
+    },
+
     isDateToday(date) {
         let today = this.getCurrentDate();
         let tmpDate = moment(date, "YYYY-MM-DD");

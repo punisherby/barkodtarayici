@@ -26,14 +26,14 @@ class SocialShareService {
         snapshotContentContainer: false
     };
 
-    startNativeSharing(data) {
+    startNativeSharing(data, messageText) {
         if (this.isActiveProcessExists) {
             return;
         }
 
         this.isActiveProcessExists = true;
 
-        let shareOptions = this.createSharingOptions(data);
+        let shareOptions = this.createSharingOptions(data, messageText);
         Share.open(shareOptions)
             .catch((err) => {
 
@@ -42,7 +42,7 @@ class SocialShareService {
         this.isActiveProcessExists = false;
     }
 
-    startNativeSharingWithRef(screenViewRef) {
+    startNativeSharingWithRef(screenViewRef, messageText) {
         if (this.isActiveProcessExists) {
             return;
         }
@@ -50,7 +50,7 @@ class SocialShareService {
 
         this.takeScreenCapture(screenViewRef).then(
             uri => {
-                let shareOptions = this.createSharingOptionsWithRef(uri);
+                let shareOptions = this.createSharingOptionsWithRef(uri, messageText);
                 Share.open(shareOptions)
                     .catch((err) => {
                         // err && console.log(err);
@@ -66,8 +66,8 @@ class SocialShareService {
 
     }
 
-    createSharingOptions(imageData) {
-        const shareMessage = "Barkod Tarayıcı ile oluşturulmuştur. Android uygulaması için: https://play.google.com/store/apps/details?id=com.barkodtarayici";
+    createSharingOptions(imageData, messageText) {
+        const shareMessage = messageText;
         return {
             title: "Barkod Tarayıcı",
             message: shareMessage,
@@ -75,8 +75,8 @@ class SocialShareService {
         };
     }
 
-    createSharingOptionsWithRef(uri) {
-        const shareMessage = "Barkod Tarayıcı ile oluşturulmuştur. Android uygulaması için: https://play.google.com/store/apps/details?id=com.barkodtarayici";
+    createSharingOptionsWithRef(uri, messageText) {
+        const shareMessage = messageText;
         return {
             title: "Barkod Tarayıcı",
             message: shareMessage,
