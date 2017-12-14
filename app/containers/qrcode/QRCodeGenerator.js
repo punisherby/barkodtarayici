@@ -5,6 +5,7 @@ import AppBaseContainer from "./../AppBaseContainer";
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from "react-native-fs"
 import {socialShareService} from "../../services/SocialShareService";
+import {dropDownAlertService} from "../../services/DropDownAlertService";
 
 class QRCodeGenerator extends AppBaseContainer {
 
@@ -46,7 +47,16 @@ class QRCodeGenerator extends AppBaseContainer {
                     <View style={{flex: 0.8}}>
                         <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>QR Kod Oluştur</Text>
                     </View>
-                    <View style={{flex: 0.1}}>
+                    <View style={{flex: 0.1, alignItems: "center", paddingRight: 10}}>
+                        <Icon
+                            name="info-circle"
+                            type='font-awesome'
+                            size={30}
+                            containerStyle={{backgroundColor: "transparent", width: 36, height: 36}}
+                            underlayColor="transparent"
+                            color="white"
+                            onPress={() => this.dropdown.alertWithType('info', dropDownAlertService.QRGeneratorInfoHeaderText, dropDownAlertService.QRGeneratorInfoText)}
+                        />
                     </View>
                 </View>
 
@@ -91,6 +101,7 @@ class QRCodeGenerator extends AppBaseContainer {
                             color='black'/>
                     </View>
                 </View>
+                {dropDownAlertService.renderDropDownElement(this, 4, 5000)}
             </View>
         );
     }

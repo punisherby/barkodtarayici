@@ -3,6 +3,7 @@ import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Mod
 import {Icon, Button, List, ListItem} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 import DateHelper from "../helper/DateHelper";
+import {dropDownAlertService} from "../services/DropDownAlertService";
 
 class PreviousBarcodes extends AppBaseContainer {
 
@@ -58,7 +59,16 @@ class PreviousBarcodes extends AppBaseContainer {
                     <View style={{flex: 0.8}}>
                         <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>Geçmiş Barkodlarım</Text>
                     </View>
-                    <View style={{flex: 0.1}}>
+                    <View style={{flex: 0.1, alignItems: "center", paddingRight: 10}}>
+                        <Icon
+                            name="info-circle"
+                            type='font-awesome'
+                            size={30}
+                            containerStyle={{backgroundColor: "transparent", width: 36, height: 36}}
+                            underlayColor="transparent"
+                            color="white"
+                            onPress={() => this.dropdown.alertWithType('info', dropDownAlertService.PreviousBarcodeInfoHeaderText, dropDownAlertService.PreviousBarcodeInfoText)}
+                        />
                     </View>
                 </View>
 
@@ -84,6 +94,7 @@ class PreviousBarcodes extends AppBaseContainer {
                 </View>
                 {!this.state.isBarcodeScanHistoryRecieved ? this._renderSpinner() : (this.state.barcodeScanHistory.length > 0 ? this._renderPreviousBarcodeList() : this._renderNoBarcodeFound())}
                 {this._renderBarcodeFoundModal()}
+                {dropDownAlertService.renderDropDownElement(this, 4, 5000)}
             </View>
         );
     }

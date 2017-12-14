@@ -7,6 +7,8 @@ import RNFS from "react-native-fs"
 import {socialShareService} from "../services/SocialShareService";
 import Barcode from 'react-native-barcode-builder';
 import { Dropdown } from 'react-native-material-dropdown';
+import DropdownAlert from 'react-native-dropdownalert';
+import {dropDownAlertService} from "../services/DropDownAlertService";
 
 class BarcodeGenerator extends AppBaseContainer {
 
@@ -86,7 +88,16 @@ class BarcodeGenerator extends AppBaseContainer {
                     <View style={{flex: 0.8}}>
                         <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>Barkod Oluştur</Text>
                     </View>
-                    <View style={{flex: 0.1}}>
+                    <View style={{flex: 0.1, alignItems: "center", paddingRight: 10}}>
+                        <Icon
+                            name="info-circle"
+                            type='font-awesome'
+                            size={30}
+                            containerStyle={{backgroundColor: "transparent", width: 36, height: 36}}
+                            underlayColor="transparent"
+                            color="white"
+                            onPress={() => this.dropdown.alertWithType('info', dropDownAlertService.BarcodeGeneratorInfoHeaderText, dropDownAlertService.BarcodeGeneratorInfoText)}
+                        />
                     </View>
                 </View>
 
@@ -162,6 +173,7 @@ class BarcodeGenerator extends AppBaseContainer {
                         />
                     </View>
                 </View>
+                {dropDownAlertService.renderDropDownElement(this, 6, 5000)}
             </View>
         );
     }

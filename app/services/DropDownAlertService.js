@@ -19,6 +19,12 @@ class DropDownAlertService {
         "MaxiCode\n" +
         "RSS-14, " + "RSS-Expanded";
 
+    BarcodeGeneratorInfoHeaderText = "Barkod Yaratma";
+    BarcodeGeneratorInfoText = "Barkod yaratmak için listedeki barkod tiplerinden birisini seçin, barkod alanına yazacağınız değer ile barkod otomatik oluşturulur. Eğer hata uyarısı görüyorsanız girdiğiniz barkod tipi ile barkod değeri uyumlu değildir.";
+
+    QRGeneratorInfoHeaderText = "QR Kodu Yaratma";
+    QRGeneratorInfoText = "Bu alandan istediğiniz uzunlukta genel bir QR kod yaratıp paylaşabilirsiniz. Herhangi bir yazı, websitesi adresi, gizli mesaj vb. olabilir.";
+
     QREventGeneratorInfoHeaderText = "QR Etkinlik Kodu Yaratma"
     QREventGeneratorInfoText = "Düzenleyeceğiniz Etkinlik Davetleri için QR Kod yaratmanızı sağlar. Bir teknoloji semineri, bir toplantı daveti, bir parti vb. olabilir.";
 
@@ -27,6 +33,9 @@ class DropDownAlertService {
 
     QRWifiGeneratorInfoHeaderText = "QR Wifi Kodu Yaratma";
     QRWifiGeneratorInfoText = "WIFI Ayarlarını QR Kod haline getirip paylaşmanız güvenliğizi arttırır. Kafe, Restoran gibi işyerleriniz için bu şekilde bir kullanım da tavsiye ederiz.";
+
+    PreviousBarcodeInfoHeaderText = "Geçmiş Barkod Yönetimi";
+    PreviousBarcodeInfoText = "Bu alandan geçmiş barkod ve qr kod taramalarınıza göz atabilir ve yönetebilirsiniz.";
 
     renderDropDownElement(thisRef, numOfLines, closeInterval, infoColor= "#41bfeb", errorColor = "#cc3232", ) {
         return (
