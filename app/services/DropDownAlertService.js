@@ -4,8 +4,10 @@ import DropdownAlert from 'react-native-dropdownalert';
 
 class DropDownAlertService {
 
-    barcodeScanInfoHeaderText = "Desteklenen Tarama Formatları"
-    barcodeScanInfoText = "QR Code\n" +
+    barcodeScanInfoHeaderText = "Genel Bilgi ve Formatlar"
+    barcodeScanInfoText = "Akıllı Kamera sayesinde ürün Barkodları, Etkinlik, Wifi vb. QR kodları tanınır ve paylaşılabilir.\n" +
+        "Desteklenen Formatlar :\n" +
+        "QR Code\n" +
         "UPC-A, " + "UPC-E, " + "UPC_EAN_EXTENSION\n" +
         "EAN-8, " + "EAN-13\n" +
         "Code 39, " + "Code 93, " + "Code 128\n" +
@@ -22,6 +24,9 @@ class DropDownAlertService {
 
     QREventGeneratorTimeFormatErrorHeaderText = "Geçerli bir tarih saat formatı girin";
     QREventGeneratorTimeFormatErrorText = "Tarih Saat Formatı şu şekilde olmalıdır \n Gün/Ay/Yıl Saat:Dakika \n Örn: 24/12/2017 10:30";
+
+    QRWifiGeneratorInfoHeaderText = "QR Wifi Kodu Yaratma";
+    QRWifiGeneratorInfoText = "WIFI Ayarlarını QR Kod haline getirip paylaşmanız güvenliğizi arttırır. Kafe, Restoran gibi işyerleriniz için bu şekilde bir kullanım da tavsiye ederiz.";
 
     renderDropDownElement(thisRef, numOfLines, closeInterval, infoColor= "#41bfeb", errorColor = "#cc3232", ) {
         return (

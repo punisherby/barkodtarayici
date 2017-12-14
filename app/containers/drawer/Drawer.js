@@ -83,11 +83,6 @@ const subMenu = [
                     title: 'QR Wifi Kodu Oluştur (Yakında...)',
                     icon: 'wifi',
                     iconType: 'font-awesome',
-                },
-                {
-                    title: 'QR Kartvizit Oluştur (Yakında...)',
-                    icon: 'vcard-o',
-                    iconType: 'font-awesome',
                 }
             ]},
     ]
@@ -214,6 +209,9 @@ class Drawer extends AppBaseContainer {
                         break;
                     case 2:
                         this._routeScreenByRootNavigator(this.getScreenMap().QREventCodeGenerator.name);
+                        break;
+                    case 3:
+                        this._routeScreenByRootNavigator(this.getScreenMap().QRWifiCodeGenerator.name);
                         break;
                     default:
                         break;

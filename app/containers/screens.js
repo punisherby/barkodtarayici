@@ -8,6 +8,7 @@ import About from "./About";
 import Contact from "./Contact";
 import BarcodeGenerator from "./BarcodeGenerator";
 import QREventCodeGenerator from "./qrcode/QREventCodeGenerator";
+import QRWifiCodeGenerator from "./qrcode/QRWifiCodeGenerator";
 
 export const SCREENS_MAP = {
     Drawer: {
@@ -49,6 +50,10 @@ export const SCREENS_MAP = {
     QREventCodeGenerator: {
         name: 'barkod.QREventCodeGenerator',
         screen: QREventCodeGenerator
+    },
+    QRWifiCodeGenerator: {
+        name: 'barkod.QRWifiCodeGenerator',
+        screen: QRWifiCodeGenerator
     },
 
 };

@@ -114,7 +114,7 @@ export default DateHelper = {
     },
 
     toMoment(dateStr) {
-        return moment(dateStr);
+        return moment(dateStr, "DD/MM/YYYY HH:mm");
     },
 
     YYYYMMDDtoDate(date, seperator = "-", isUtc = false) {

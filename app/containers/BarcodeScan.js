@@ -9,6 +9,7 @@ import DateHelper from "../helper/DateHelper";
 import {optionsService} from "../services/OptionsService";
 import {socialShareService} from "../services/SocialShareService";
 import {dropDownAlertService} from "../services/DropDownAlertService";
+import QRCode from 'react-native-qrcode-svg';
 
 export let rootNavigator = null;
 
@@ -26,6 +27,7 @@ class BarcodeScan extends AppBaseContainer {
         torchMode: "off",
         barcodeDetected : false,
         barcodeDetectedEvent: false,
+        barcodeDetectedWifi: false,
         cameraKeepOfflineInterval: null,
         scannedBarcodeImage: null
     };
@@ -45,7 +47,7 @@ class BarcodeScan extends AppBaseContainer {
         }, 200);
 
         this.cameraKeepOfflineInterval = setInterval(() => {
-            if (this.state.barcodeDetected || this.state.barcodeDetectedEvent) {
+            if (this.state.barcodeDetected || this.state.barcodeDetectedEvent || this.state.barcodeDetectedWifi) {
                 this._barCode.stopScan();
             }
         }, 1 * 1000);
@@ -128,7 +130,8 @@ class BarcodeScan extends AppBaseContainer {
                 {this.state.shouldCameraShow && this.state.cameraPhotoPermissionGranted ? this._renderBarcodeScanner() : this._renderSpinner()}
                 {this.state.barcodeDetected ? this._renderBarcodeFoundModal() : undefined}
                 {this.state.barcodeDetectedEvent ? this._renderBarcodeFoundEventModal() : undefined}
-                {dropDownAlertService.renderDropDownElement(this, 11, 5000)}
+                {this.state.barcodeDetectedWifi ? this._renderBarcodeFoundWifiModal() : undefined}
+                {dropDownAlertService.renderDropDownElement(this, 15, 5000)}
             </View>
         );
     }
@@ -220,8 +223,9 @@ class BarcodeScan extends AppBaseContainer {
         let title = activity[0].replace("SUMMARY:", "");
         let location = activity[1].replace("LOCATION:", "");
         let desc = activity[2].replace("DESCRIPTION:", "")
-        let startDate = activity[3].replace("DTSTART:", "");
-        let endDate = activity[4].replace("DTEND:", "");
+        console.log(activity[3].replace("DTSTART:", ""), "-", DateHelper.toMoment(activity[3].replace("DTSTART:", "")));
+        let startDate = DateHelper.dateToFullDateTimeString(DateHelper.toMoment(activity[3].replace("DTSTART:", "")));
+        let endDate = DateHelper.dateToFullDateTimeString(DateHelper.toMoment(activity[4].replace("DTEND:", "")));
 
         return (
             <Modal
@@ -235,13 +239,22 @@ class BarcodeScan extends AppBaseContainer {
                 <View style={{backgroundColor: "#00000044", flex: 1, height: null}}>
                     <View style={{borderRadius: 2, marginHorizontal: 20, marginTop: 40, marginBottom: 40, padding: 10, backgroundColor: "white",}}>
                         <View collapsable={false} ref={(ref) => this.screenViewRef = ref} style={{backgroundColor: "#41bfeb", paddingBottom: 10, borderRadius: 6}}>
-                            <Icon
-                                name='event-available'
-                                type='material-icons'
-                                size={36}
-                                containerStyle={{marginBottom: 15, paddingTop: 10}}
-                                color="black"
-                            />
+                            <View style={{flexDirection: "row"}}>
+                                <Icon
+                                    name='event-available'
+                                    type='material-icons'
+                                    size={36}
+                                    containerStyle={{marginBottom: 15, paddingTop: 10, flex: 0.5}}
+                                    color="black"
+                                />
+                                <View style={{flex: 0.5, alignItems: "flex-end", padding: 8}}>
+                                    <QRCode
+                                        getRef={(c) => (this.svg = c)}
+                                        value={this.lastBarcodeData.data.code}
+                                        size={100}
+                                        color='black'/>
+                                </View>
+                            </View>
                             <View style={{paddingLeft: 15, paddingBottom: 5}}>
                                 <Text style={{fontWeight: "bold"}}>Etkinlik Adı : </Text>
                                 <Text style={{paddingRight: 15}}>{title}</Text>
@@ -272,12 +285,90 @@ class BarcodeScan extends AppBaseContainer {
                         />
 
                         <Button
-                            onPress={() => this._onEventSharePressed(this.lastBarcodeData.data.code)}
+                            onPress={() => this._onEventSharePressed()}
                             buttonStyle={{marginBottom: 8}}
                             backgroundColor="#41bfeb"
                             borderRadius={4}
                             icon={{name: 'share', type: 'font-awesome'}}
                             title={'Etkinliği Paylaş'} />
+
+                        <Button
+                            onPress={() => this._resetBarcodeScan()}
+                            buttonStyle={{marginBottom: 20}}
+                            backgroundColor="#41bfeb"
+                            borderRadius={4}
+                            icon={{name: 'close', type: 'font-awesome'}}
+                            title={'Çıkış / Yeni Arama'} />
+                    </View>
+                </View>
+            </Modal>
+        )
+    }
+
+    _renderBarcodeFoundWifiModal() {
+        let wifi = (this.lastBarcodeData.data.code).replace("WIFI:", "");
+        let index = [];
+        index[0] = wifi.indexOf("T:") + 2;
+        index[1] = wifi.indexOf("S:") + 2;
+        index[2] = wifi.indexOf("P:") + 2;
+        let authentication = wifi.substring(index[0], wifi.indexOf(";", index[0]));
+        let ssid = wifi.substring(index[1], wifi.indexOf(";", index[1]));
+        let password = wifi.substring(index[2], wifi.indexOf(";", index[2]));
+
+        return (
+            <Modal
+                offset={50}
+                visible={this.state.barcodeDetectedWifi}
+                transparent={true}
+                onRequestClose={() => {
+                }}
+                animationType={'fade'}
+                closeOnTouchOutside={false}>
+                <View style={{backgroundColor: "#00000044", flex: 1, height: null}}>
+                    <View style={{borderRadius: 2, marginHorizontal: 20, marginTop: 40, marginBottom: 40, padding: 10, backgroundColor: "white",}}>
+                        <View collapsable={false} ref={(ref) => this.screenViewRef2 = ref} style={{backgroundColor: "#41bfeb", paddingBottom: 10, borderRadius: 6}}>
+                            <View style={{flexDirection: "row"}}>
+                                <View style={{flex: 0.5, flexDirection: "column", padding: 10}}>
+                                    <Text style={{fontFamily: "Verdana", fontSize: 14, color: "black", textAlign: "center"}}>WIFI QR CODE</Text>
+                                    <Icon
+                                        name='wifi'
+                                        type='font-awesome'
+                                        size={36}
+                                        containerStyle={{marginBottom: 15, paddingTop: 5}}
+                                        color="black"
+                                    />
+                                </View>
+                                <View style={{flex: 0.5, alignItems: "flex-end", padding: 8}}>
+                                </View>
+                            </View>
+                            <View style={{paddingLeft: 15, paddingBottom: 5}}>
+                                <Text style={{fontWeight: "bold"}}>Authentication : </Text>
+                                <Text style={{paddingRight: 15}}>{authentication}</Text>
+                            </View>
+                            <View style={{paddingLeft: 15, paddingBottom: 5}}>
+                                <Text style={{fontWeight: "bold"}}>SSID (Network Adı) : </Text>
+                                <Text style={{paddingRight: 15}}>{ssid}</Text>
+                            </View>
+                            <View style={{paddingLeft: 15, paddingBottom: 5}}>
+                                <Text style={{fontWeight: "bold"}}>Şifre : </Text>
+                                <Text style={{paddingRight: 15}}>{password}</Text>
+                            </View>
+                        </View>
+                        <Icon
+                            name='md-arrow-round-down'
+                            type='ionicon'
+                            size={22}
+                            containerStyle={{marginBottom: 15}}
+                            color="black"
+                        />
+
+                        <Button
+                            onPress={() => this._onWifiSharePressed()}
+                            buttonStyle={{marginBottom: 8}}
+                            backgroundColor="#41bfeb"
+                            borderRadius={4}
+                            icon={{name: 'share', type: 'font-awesome'}}
+                            title={'Wifi Paylaş'} />
 
                         <Button
                             onPress={() => this._resetBarcodeScan()}
@@ -350,7 +441,7 @@ class BarcodeScan extends AppBaseContainer {
     }
 
     _onBarCodeRead(e) {
-        if (this.state.barcodeDetected || this.state.barcodeDetectedEvent) {
+        if (this.state.barcodeDetected || this.state.barcodeDetectedEvent || this.state.barcodeDetectedWifi) {
             return;
         }
         this.lastBarcodeData = e.nativeEvent;
@@ -364,6 +455,8 @@ class BarcodeScan extends AppBaseContainer {
                 this._openQRCodeURL(this.lastBarcodeData.data);
             } else if (ifQRType == "event") {
                 this.setState({barcodeDetectedEvent: true, torchMode: "off"});
+            } else if (ifQRType == "wifi") {
+                this.setState({barcodeDetectedWifi: true, torchMode: "off"});
             }
             else {
                 this.setState({barcodeDetected: true, torchMode: "off"});
@@ -382,7 +475,7 @@ class BarcodeScan extends AppBaseContainer {
     }
 
     _resetBarcodeScan() {
-        this.setState({barcodeDetected: false, barcodeDetectedEvent: false});
+        this.setState({barcodeDetected: false, barcodeDetectedEvent: false, barcodeDetectedWifi: false});
 
         setTimeout(() => {
             this._barCode.startScan()
@@ -417,6 +510,10 @@ class BarcodeScan extends AppBaseContainer {
 
     _onEventSharePressed() {
         socialShareService.startNativeSharingWithRef(this.screenViewRef, "Bu Etkinlik, Barkod Tarayıcı ile oluşturulmuştur. Android uygulaması: https://play.google.com/store/apps/details?id=com.barkodtarayici");
+    }
+
+    _onWifiSharePressed() {
+        socialShareService.startNativeSharingWithRef(this.screenViewRef2, "Bu Wifi Kodu, Barkod Tarayıcı ile oluşturulmuştur. Android uygulaması: https://play.google.com/store/apps/details?id=com.barkodtarayici");
     }
 
     _blockBackPage() {
@@ -466,6 +563,8 @@ class BarcodeScan extends AppBaseContainer {
             return "url";
         } else if (code.indexOf("BEGIN:VEVENT") > -1 && code.indexOf("END:VEVENT") > -1 ) {
             return "event";
+        } else if (code.indexOf("WIFI:") == 0) {
+            return "wifi";
         }
         else {
             return "qr";
