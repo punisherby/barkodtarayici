@@ -52,7 +52,7 @@ class About extends AppBaseContainer {
                         color="#41bfeb"
                     />
                     <Text style={{paddingTop: 10, textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>
-                        Version 1.6
+                        Version 1.7
                     </Text>
                 </View>
 

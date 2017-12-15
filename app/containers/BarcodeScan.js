@@ -1,5 +1,8 @@
 import React, {Component} from "react";
-import {TouchableOpacity, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, BackHandler, AsyncStorage, Clipboard, ActivityIndicator} from "react-native";
+import {
+    TouchableOpacity, WebView, Platform, NativeModules, View, Alert, Image, Text, Modal, Linking, BackHandler,
+    AsyncStorage, Clipboard, ActivityIndicator, Dimensions
+} from "react-native";
 import Barcode from 'react-native-smart-barcode';
 import {Icon, Button} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
@@ -173,43 +176,24 @@ class BarcodeScan extends AppBaseContainer {
                 animationType={'fade'}
                 closeOnTouchOutside={false}>
                 <View style={{backgroundColor: "#00000044", flex: 1, height: null}}>
-                    <View style={{borderRadius: 2, marginHorizontal: 20, marginTop: 40, marginBottom: 40, padding: 10, backgroundColor: "white",}}>
-                        <View style={{paddingLeft: 15, paddingBottom: 15, paddingTop: 30}}>
+                    <View style={{height: Dimensions.get('window').height / 1.1, borderRadius: 2, marginHorizontal: 20, marginTop: 40, marginBottom: 20, padding: 10, backgroundColor: "white",}}>
+                        <View style={{flex: 0.15, paddingLeft: 15, paddingBottom: 15, paddingTop: 10, backgroundColor: "#41bfeb", borderRadius: 8}}>
                             <Text style={{fontWeight: "bold"}}>Barkod Tipi : </Text>
-                            <Text style={{paddingRight: 15}}>{this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.type) : undefined}</Text>
-                        </View>
-                        <View style={{paddingLeft: 15, paddingBottom: 15}}>
+                            <Text style={{paddingRight: 15}}>{this.lastBarcodeData.data.type}</Text>
                             <Text style={{fontWeight: "bold"}}>Barkod No / İçerik : </Text>
-                            <Text style={{paddingRight: 15}}>{this.lastBarcodeData ? JSON.stringify(this.lastBarcodeData.data.code) : undefined}</Text>
+                            <Text style={{paddingRight: 15}}>{this.lastBarcodeData.data.code}</Text>
                         </View>
-                        <Icon
-                            name='md-arrow-round-down'
-                            type='ionicon'
-                            size={22}
-                            containerStyle={{marginBottom: 15}}
-                            color="black"
-                        />
-                        <Button
-                            onPress={() => this._onGoogleSearchPressed(this.lastBarcodeData.data.code)}
-                            buttonStyle={{marginBottom: 8}}
-                            backgroundColor="#41bfeb"
-                            borderRadius={4}
-                            icon={{name: 'google', type: 'font-awesome'}}
-                            title={'Google\'da Ara'} />
-
-                        <Button
-                            onPress={() => this._onGoogleProductSearchPressed(this.lastBarcodeData.data.code)}
-                            buttonStyle={{marginBottom: 8}}
-                            backgroundColor="#41bfeb"
-                            borderRadius={4}
-                            icon={{name: 'shopping-cart', type: 'font-awesome'}}
-                            title={'Ürün Olarak Ara'} />
-
+                        <View style={{flex: 0.80, width: null, paddingBottom: 10}}>
+                            <WebView
+                                source={{uri: 'https://www.google.com.tr/search?safe=on&site=imghp&tbm=isch&q='+ this.lastBarcodeData.data.code}}
+                                startInLoadingState={true}
+                            />
+                        </View>
                         <Button
                             onPress={() => this._resetBarcodeScan()}
-                            buttonStyle={{marginBottom: 20}}
                             backgroundColor="#41bfeb"
                             borderRadius={4}
+                            containerStyle={{flex: 0.05}}
                             icon={{name: 'close', type: 'font-awesome'}}
                             title={'Çıkış / Yeni Arama'} />
                     </View>
