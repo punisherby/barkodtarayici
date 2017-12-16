@@ -159,6 +159,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-device-info')
     compile(project(':react-native-firebase')) {
         transitive = false
     }

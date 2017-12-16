@@ -3,6 +3,7 @@ package com.barkodtarayici;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import io.invertase.firebase.RNFirebasePackage;
 import com.horcrux.svg.SvgPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -63,7 +64,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new RNFSPackage(),
             new RNSharePackage(),
             new RNViewShotPackage(),
-            new RNFirebasePackage()
+            new RNFirebasePackage(),
+            new RNDeviceInfo()
     );
   }
 
