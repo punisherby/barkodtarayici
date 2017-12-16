@@ -5,7 +5,7 @@ import AppBaseContainer from "./AppBaseContainer";
 import DateHelper from "../helper/DateHelper";
 import {dropDownAlertService} from "../services/DropDownAlertService";
 
-class PreviousBarcodes extends AppBaseContainer {
+class MyFavourites extends AppBaseContainer {
 
     static navigatorStyle = {
         tabBarHidden: true,
@@ -57,7 +57,7 @@ class PreviousBarcodes extends AppBaseContainer {
                         </TouchableOpacity>
                     </View>
                     <View style={{flex: 0.8}}>
-                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>Geçmiş</Text>
+                        <Text style={{marginTop: -5, textAlign: "center", fontFamily: "Verdana", fontSize: 18, fontWeight: "bold", color: "white"}}>Favorilerim</Text>
                     </View>
                     <View style={{flex: 0.1, alignItems: "center", paddingRight: 10}}>
                         <Icon
@@ -89,7 +89,7 @@ class PreviousBarcodes extends AppBaseContainer {
                             size={36}
                             color="#41bfeb"
                         />
-                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Geçmişi Sil</Text>
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>Fa Sil</Text>
                     </TouchableOpacity>
                 </View>
                 {!this.state.isBarcodeScanHistoryRecieved ? this._renderSpinner() : (this.state.barcodeScanHistory.length > 0 ? this._renderPreviousBarcodeList() : this._renderNoBarcodeFound())}
@@ -255,4 +255,4 @@ class PreviousBarcodes extends AppBaseContainer {
     }
 }
 
-export default (PreviousBarcodes);
+export default (MyFavourites);

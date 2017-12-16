@@ -10,6 +10,7 @@ import Invite from "./Invite";
 import BarcodeGenerator from "./BarcodeGenerator";
 import QREventCodeGenerator from "./qrcode/QREventCodeGenerator";
 import QRWifiCodeGenerator from "./qrcode/QRWifiCodeGenerator";
+import MyFavourites from "./MyFavourites";
 
 export const SCREENS_MAP = {
     Drawer: {
@@ -31,6 +32,10 @@ export const SCREENS_MAP = {
     PreviousBarcodes: {
         name: 'barkod.PreviousBarcodes',
         screen: PreviousBarcodes
+    },
+    MyFavourites: {
+        name: 'barkod.MyFavourites',
+        screen: MyFavourites
     },
     Settings: {
         name: 'barkod.Settings',
