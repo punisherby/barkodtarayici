@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "394217965152",
+    "firebase_url": "https://barkodtarayici.firebaseio.com",
+    "project_id": "barkodtarayici",
+    "storage_bucket": "barkodtarayici.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394217965152:android:7df4b5d9258a3089",
+        "android_client_info": {
+          "package_name": "com.barkodtarayici"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394217965152-h2rm08v442cocjcgvev0pf4b2d6kvltv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdnLdmUJJE6n7cNQvdo6tJ5uNuMFJjfvM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

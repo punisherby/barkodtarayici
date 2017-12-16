@@ -3,6 +3,7 @@ package com.barkodtarayici;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
 import com.horcrux.svg.SvgPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.opensettings.OpenSettingsPackage;
@@ -61,7 +62,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new SvgPackage(),
             new RNFSPackage(),
             new RNSharePackage(),
-            new RNViewShotPackage()
+            new RNViewShotPackage(),
+            new RNFirebasePackage()
     );
   }
 
