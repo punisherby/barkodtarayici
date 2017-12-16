@@ -17,12 +17,6 @@ class Contact extends AppBaseContainer {
         this.setStyle(this.navigatorStyle);
     }
 
-    componentDidMount() {
-    }
-
-    componentWillUnmount() {
-    }
-
     render() {
         return (
             <View style={{flex: 1, backgroundColor: "white", paddingTop: Platform.OS == "ios" ? 20 : 0}}>

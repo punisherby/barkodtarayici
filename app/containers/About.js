@@ -17,12 +17,6 @@ class About extends AppBaseContainer {
         this.setStyle(this.navigatorStyle);
     }
 
-    componentDidMount() {
-    }
-
-    componentWillUnmount() {
-    }
-
     render() {
         return (
             <View style={{flex: 1, backgroundColor: "white", paddingTop: Platform.OS == "ios" ? 20 : 0}}>
@@ -52,7 +46,7 @@ class About extends AppBaseContainer {
                         color="#41bfeb"
                     />
                     <Text style={{paddingTop: 10, textAlign: "center", fontFamily: "Verdana", fontSize: 12, color: "black"}}>
-                        Version 1.7
+                        Version 1.8
                     </Text>
                 </View>
 

@@ -30,21 +30,6 @@ const list = [
         title: 'Ayarlar',
         icon: 'settings',
         iconType: 'simple-line-icon',
-    },
-    {
-        title: 'Hakkında',
-        icon: 'information-outline',
-        iconType: 'material-community',
-    },
-    {
-        title: 'İletişim',
-        icon: 'contact-mail',
-        iconType: 'material-community',
-    },
-    {
-        title: 'Alışveriş (Çok Yakında...)',
-        icon: 'ios-shirt-outline',
-        iconType: 'ionicon',
     }
 ]
 
@@ -140,7 +125,7 @@ class Drawer extends AppBaseContainer {
     _renderMenu() {
         return (
             <View style={{flex: 1, opacity:0.95, width:null, height:null, backgroundColor: "white"}}>
-                <View style={{flex: 0.1, backgroundColor: "#41bfeb", alignItems: "center", justifyContent: "center", flexDirection:"row"}}>
+                <View style={{flex: 0.1, backgroundColor: "#46d0ff", alignItems: "center", justifyContent: "center", flexDirection:"row"}}>
                     <Image
                         style={{flex:0.2, width: 50, height: 50, resizeMode: 'contain'}}
                         source={require('../../images/app_logo.png')}
@@ -148,7 +133,7 @@ class Drawer extends AppBaseContainer {
                     <Text style={{flex:0.6, textAlign: "center", fontFamily: "Verdana", fontSize: 20, fontWeight: "bold", color: "white"}}>Hızlı Menü</Text>
                     <View style={{flex: 0.2}}></View>
                 </View>
-                <View style={{flex: 0.9}}>
+                <View style={{flex: 0.80}}>
                     <List containerStyle={{marginBottom: 0}}>
                         {
                             list.map((item, i) => (
@@ -162,6 +147,35 @@ class Drawer extends AppBaseContainer {
                             ))
                         }
                     </List>
+                </View>
+                <View style={{flex: 0.1, flexDirection: "row", alignItems: "center", justifyContent: "space-around", paddingBottom: 2}}>
+                    <TouchableOpacity onPress={() => this._routeScreenByRootNavigator(this.getScreenMap().Invite.name)}>
+                        <Icon
+                            name="share"
+                            type='font-awesome'
+                            size={32}
+                            color="#41bfeb"
+                        />
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 14, color: "#41bfeb"}}>Davet Et</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this._routeScreenByRootNavigator(this.getScreenMap().About.name)}>
+                        <Icon
+                            name="information-outline"
+                            type='material-community'
+                            size={32}
+                            color="#41bfeb"
+                        />
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 14, color: "#41bfeb"}}>Hakkımızda</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this._routeScreenByRootNavigator(this.getScreenMap().Contact.name)}>
+                        <Icon
+                        name="contact-mail"
+                        type='material-community'
+                        size={32}
+                        color="#41bfeb"
+                    />
+                        <Text style={{textAlign: "center", fontFamily: "Verdana", fontSize: 14, color: "#41bfeb"}}>İletişim</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
@@ -178,7 +192,7 @@ class Drawer extends AppBaseContainer {
                 }
                 break;
             case 2:
-                this.setState({topLevelMenuId: 2, subMenuHeaderText: "QR Kod Menu"})
+                this.setState({topLevelMenuId: 2, subMenuHeaderText: "QR Kod İşlemleri"})
                 break;
             case 3:
                 this._routeScreenByRootNavigator(this.getScreenMap().BarcodeGenerator.name);
@@ -188,12 +202,6 @@ class Drawer extends AppBaseContainer {
                 break;
             case 5:
                 this._routeScreenByRootNavigator(this.getScreenMap().Settings.name)
-                break;
-            case 6:
-                this._routeScreenByRootNavigator(this.getScreenMap().About.name)
-                break;
-            case 7:
-                this._routeScreenByRootNavigator(this.getScreenMap().Contact.name)
                 break;
             default:
                 break;

@@ -26,6 +26,22 @@ class SocialShareService {
         snapshotContentContainer: false
     };
 
+    startNativeSharingTextOnly(defaultMessage, messageText) {
+        if (this.isActiveProcessExists) {
+            return;
+        }
+
+        this.isActiveProcessExists = true;
+
+        let shareOptions = this.createSharingOptionsTextOnly(defaultMessage, messageText);
+        Share.open(shareOptions)
+            .catch((err) => {
+
+            })
+
+        this.isActiveProcessExists = false;
+    }
+
     startNativeSharing(data, messageText) {
         if (this.isActiveProcessExists) {
             return;
@@ -64,6 +80,14 @@ class SocialShareService {
 
         this.isActiveProcessExists = false;
 
+    }
+
+    createSharingOptionsTextOnly (defaultMessage, messageText) {
+        const shareMessage = messageText ? (messageText + "\n\n" + defaultMessage) : defaultMessage;
+        return {
+            title: "Barkod Tarayıcı",
+            message: shareMessage,
+        };
     }
 
     createSharingOptions(imageData, messageText) {

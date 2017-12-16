@@ -6,6 +6,7 @@ import PreviousBarcodes from "./PreviousBarcodes";
 import Settings from "./Settings";
 import About from "./About";
 import Contact from "./Contact";
+import Invite from "./Invite";
 import BarcodeGenerator from "./BarcodeGenerator";
 import QREventCodeGenerator from "./qrcode/QREventCodeGenerator";
 import QRWifiCodeGenerator from "./qrcode/QRWifiCodeGenerator";
@@ -34,6 +35,10 @@ export const SCREENS_MAP = {
     Settings: {
         name: 'barkod.Settings',
         screen: Settings
+    },
+    Invite: {
+        name: 'barkod.Invite',
+        screen: Invite
     },
     About: {
         name: 'barkod.About',
