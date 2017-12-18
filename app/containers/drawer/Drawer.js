@@ -27,11 +27,6 @@ const list = [
         iconType: 'material-community',
     },
     {
-        title: 'Favorilerim',
-        icon: 'history',
-        iconType: 'material-community',
-    },
-    {
         title: 'Ayarlar',
         icon: 'settings',
         iconType: 'simple-line-icon',
@@ -206,9 +201,6 @@ class Drawer extends AppBaseContainer {
                 this._routeScreenByRootNavigator(this.getScreenMap().PreviousBarcodes.name)
                 break;
             case 5:
-                this._routeScreenByRootNavigator(this.getScreenMap().MyFavourites.name)
-                break;
-            case 6:
                 this._routeScreenByRootNavigator(this.getScreenMap().Settings.name)
                 break;
             default:

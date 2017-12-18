@@ -26,10 +26,6 @@ class MyFavourites extends AppBaseContainer {
         this.setStyle(this.navigatorStyle);
     }
 
-    componentDidMount() {
-        dbServices.update({ test: "burak burak" });
-    }
-
     componentWillUnmount() {
     }
 
