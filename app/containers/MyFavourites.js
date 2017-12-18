@@ -4,6 +4,7 @@ import {Icon, Button, List, ListItem} from "react-native-elements";
 import AppBaseContainer from "./AppBaseContainer";
 import DateHelper from "../helper/DateHelper";
 import {dropDownAlertService} from "../services/DropDownAlertService";
+import {dbServices} from "../services/DBServices";
 
 class MyFavourites extends AppBaseContainer {
 
@@ -25,18 +26,8 @@ class MyFavourites extends AppBaseContainer {
         this.setStyle(this.navigatorStyle);
     }
 
-    async componentDidMount() {
-        try {
-            const value = await AsyncStorage.getItem('barcodeScanHistory');
-            if (value !== null){
-                this.setState({barcodeScanHistory: JSON.parse(value).reverse(), isBarcodeScanHistoryRecieved: true});
-            } else {
-                this.setState({isBarcodeScanHistoryRecieved: true});
-            }
-        } catch (error) {
-            console.log(error);
-            this.setState({isBarcodeScanHistoryRecieved: true});
-        }
+    componentDidMount() {
+        dbServices.update({ test: "burak burak" });
     }
 
     componentWillUnmount() {

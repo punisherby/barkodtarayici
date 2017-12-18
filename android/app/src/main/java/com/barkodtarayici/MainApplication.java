@@ -5,6 +5,7 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 import com.horcrux.svg.SvgPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.opensettings.OpenSettingsPackage;
@@ -65,7 +66,8 @@ public class MainApplication extends NavigationApplication implements ReactAppli
             new RNSharePackage(),
             new RNViewShotPackage(),
             new RNFirebasePackage(),
-            new RNDeviceInfo()
+            new RNDeviceInfo(),
+            new RNFirebaseDatabasePackage()
     );
   }
 

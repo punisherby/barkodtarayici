@@ -166,6 +166,7 @@ dependencies {
     // Firebase dependencies
     compile "com.google.android.gms:play-services-base:11.6.2"
     compile "com.google.firebase:firebase-core:11.6.2"
+    compile "com.google.firebase:firebase-database:11.6.2"
     compile project(':react-native-view-shot')
     compile project(':react-native-share')
     compile project(':react-native-fs')
