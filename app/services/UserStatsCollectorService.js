@@ -8,8 +8,9 @@ class UserStatsCollectorService {
     initialize(){
         let userUniqueIdString = "user_" + DeviceInfo.getUniqueID();
         dbServices.setDBRef("userStats/" + userUniqueIdString);
+        let userStatsObj = new Object();
 
-        let appStartCount = 0;
+        let appStartCount = 1;
         dbServices.getOnce("value")
             .then(function(snapshot) {
                 snapshot.forEach(function(childSnapshot) {
@@ -17,16 +18,21 @@ class UserStatsCollectorService {
                     let childData = childSnapshot.val();
 
                     if (key == "appStartCount"){
+                        dbServices.setDBRef("userStats");
                         appStartCount = childData + 1
-
-                        let userStatsObj = new Object();
                         userStatsObj[userUniqueIdString] = {
                             appStartCount : appStartCount
                         }
-                        dbServices.setDBRef("userStats");
                         dbServices.update(userStatsObj);
                     }
                 });
+            })
+            .catch(err => {
+                dbServices.setDBRef("userStats");
+                userStatsObj[userUniqueIdString] = {
+                    appStartCount : appStartCount
+                }
+                dbServices.update(userStatsObj);
             });
     }
 }
