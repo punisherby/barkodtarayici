@@ -159,12 +159,19 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-device-info')
+    compile(project(':react-native-device-info')) {
+        exclude group: "com.google.android.gms"
+    }
     compile(project(':react-native-firebase')) {
         transitive = false
     }
     // Firebase dependencies
-    compile "com.google.android.gms:play-services-base:11.6.2"
+    compile ("com.google.android.gms:play-services-base:11.6.2") {
+        force = true;
+    }
+    compile ("com.google.android.gms:play-services-gcm:11.6.2") {
+            force = true;
+        }
     compile "com.google.firebase:firebase-core:11.6.2"
     compile "com.google.firebase:firebase-database:11.6.2"
     compile project(':react-native-view-shot')
